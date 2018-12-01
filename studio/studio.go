@@ -78,14 +78,6 @@ type Attachment struct {
 	Vectors [3]mgl32.Vec3
 }
 
-// body part index
-type BodyPart struct {
-	Name       [64]byte
-	NumModels  int32
-	Base       int32
-	ModelIndex int32 // index into models array
-}
-
 // skin info
 type Texture struct {
 	Name   [64]byte
