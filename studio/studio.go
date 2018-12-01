@@ -96,60 +96,12 @@ type Mesh struct {
 	NormIndex int32 // normal vec3_t
 }
 
-// sequence descriptions
-type SeqDesc struct {
-	Label [32]byte // sequence label
-
-	Fps   float32 // frames per second
-	Flags int32   // looping/non-looping flags
-
-	Activity  int32
-	ActWeight int32
-
-	NumEvents  int32
-	EventIndex int32
-
-	NumFrames int32 // number of frames per sequence
-
-	NumPivots  int32 // number of foot pivots
-	PivotIndex int32
-
-	MotionType         int32
-	MotionBone         int32
-	LinearMovement     mgl32.Vec3
-	AutoMovePosIndex   int32
-	AutoMoveAngleIndex int32
-
-	BbMin mgl32.Vec3 // per sequence bounding box
-	BbMax mgl32.Vec3
-
-	NumBlends int32
-	AnimIndex int32 // mstudioanim_t pointer relative to start of sequence group data [blend][bone][X, Y, Z, XR, YR, ZR]
-
-	BlendType   [2]int32   // X, Y, Z, XR, YR, ZR
-	BlendStart  [2]float32 // starting value
-	BlendEnd    [2]float32 // ending value
-	BlendParent int32
-
-	SeqGroup int32 // sequence group for demand loading
-
-	EntryNode int32 // transition node at entry
-	ExitNode  int32 // transition node at exit
-	NodeFlags int32 // transition rules
-
-	NextSeq int32 // auto advancing sequences
-}
-
 // demand loaded sequence groups
 type SeqGroup struct {
 	Label   [32]byte // textual name
 	Name    [64]byte // file name
 	Unused1 int32    // was "cache"  - index pointer
 	Unused2 int32    // was "data" -  hack for group 0
-}
-
-type Anim struct {
-	Offset [6]uint16
 }
 
 // animation frames
