@@ -1,6 +1,9 @@
 package studio
 
 import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
 	"unsafe"
 )
 
@@ -24,6 +27,19 @@ type Model struct {
 
 	NumGroups  int32 // deformation groups
 	GroupIndex int32
+}
+
+func NewModels(buf []byte, num int) []Model {
+	m := make([]Model, num)
+	r := bytes.NewReader(buf)
+
+	// read models
+	if err := binary.Read(r, binary.LittleEndian, m); err != nil {
+		fmt.Print(err)
+		return []Model{}
+	}
+
+	return m
 }
 
 func (m *Model) GetMeshBuf(buf []byte) []byte {

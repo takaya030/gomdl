@@ -20,6 +20,12 @@ func main() {
 	fmt.Printf("%# v\n", pretty.Formatter(*h))
 
 	// read bodyparts
-	b := studio.NewBodyParts(h.GetBodyPartsBuf(buf), int(h.NumBodyParts))
-	fmt.Printf("%# v\n", pretty.Formatter(b))
+	bps := studio.NewBodyParts(h.GetBodyPartsBuf(buf), int(h.NumBodyParts))
+	fmt.Printf("%# v\n", pretty.Formatter(bps))
+
+	// read models
+	for _, bp := range bps {
+		m := studio.NewModels(bp.GetModelsBuf(buf), int(bp.NumModels))
+		fmt.Printf("%# v\n", pretty.Formatter(m))
+	}
 }
