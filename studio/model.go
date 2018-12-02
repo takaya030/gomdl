@@ -42,7 +42,7 @@ func NewModels(buf []byte, num int) []Model {
 	return m
 }
 
-func (m *Model) GetMeshBuf(buf []byte) []byte {
+func (m *Model) GetMeshesBuf(buf []byte) []byte {
 	s := int(m.MeshIndex)
 	e := s + int(unsafe.Sizeof(Mesh{}))*int(m.NumMesh)
 

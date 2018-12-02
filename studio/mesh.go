@@ -1,9 +1,10 @@
 package studio
 
 import (
-	"unsafe"
-
-	"github.com/go-gl/mathgl/mgl32"
+	"bytes"
+	"encoding/binary"
+	"fmt"
+	//"unsafe"
 )
 
 // meshes
@@ -11,13 +12,19 @@ type Mesh struct {
 	NumTris   int32
 	TriIndex  int32
 	SkinRef   int32
-	NumNorms  int32 // per mesh normals
-	NormIndex int32 // normal vec3_t
+	NumNorms  int32 // per mesh normals (no use)
+	NormIndex int32 // normal vec3_t (no use)
 }
 
-func (m *Mesh) GetNormsBuf(buf []byte) []byte {
-	s := int(m.NormIndex)
-	e := s + int(unsafe.Sizeof(mgl32.Vec3{}))*int(m.NumNorms)
+func NewMeshes(buf []byte, num int) []Mesh {
+	m := make([]Mesh, num)
+	r := bytes.NewReader(buf)
 
-	return buf[s:e]
+	// read meshes
+	if err := binary.Read(r, binary.LittleEndian, m); err != nil {
+		fmt.Print(err)
+		return []Mesh{}
+	}
+
+	return m
 }

@@ -25,7 +25,13 @@ func main() {
 
 	// read models
 	for _, bp := range bps {
-		m := studio.NewModels(bp.GetModelsBuf(buf), int(bp.NumModels))
-		fmt.Printf("%# v\n", pretty.Formatter(m))
+		mdls := studio.NewModels(bp.GetModelsBuf(buf), int(bp.NumModels))
+		fmt.Printf("%# v\n", pretty.Formatter(mdls))
+
+		// read meshes
+		for _, mdl := range mdls {
+			mshs := studio.NewMeshes(mdl.GetMeshesBuf(buf), int(mdl.NumMesh))
+			fmt.Printf("%# v\n", pretty.Formatter(mshs))
+		}
 	}
 }
