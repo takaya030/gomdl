@@ -18,4 +18,8 @@ func main() {
 	// read hdr
 	h := studio.NewHdr(buf)
 	fmt.Printf("%# v\n", pretty.Formatter(*h))
+
+	// read bodyparts
+	b := studio.NewBodyParts(h.GetBodyPartsBuf(buf), int(h.NumBodyParts))
+	fmt.Printf("%# v\n", pretty.Formatter(b))
 }

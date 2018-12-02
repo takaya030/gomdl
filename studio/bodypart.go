@@ -1,6 +1,9 @@
 package studio
 
 import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
 	"unsafe"
 )
 
@@ -10,6 +13,19 @@ type BodyPart struct {
 	NumModels  int32
 	Base       int32
 	ModelIndex int32 // index into models array
+}
+
+func NewBodyParts(buf []byte, num int) []BodyPart {
+	b := make([]BodyPart, num)
+	r := bytes.NewReader(buf)
+
+	// read bodyparts
+	if err := binary.Read(r, binary.LittleEndian, b); err != nil {
+		fmt.Print(err)
+		return []BodyPart{}
+	}
+
+	return b
 }
 
 func (b *BodyPart) GetSubModelsBuf(buf []byte) []byte {
