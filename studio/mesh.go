@@ -28,3 +28,9 @@ func NewMeshes(buf []byte, num int) []Mesh {
 
 	return m
 }
+
+func (m *Mesh) GetTrisBuf(buf []byte) []byte {
+	s := int(m.TriIndex)
+
+	return buf[s:]
+}

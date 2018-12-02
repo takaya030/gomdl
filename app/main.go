@@ -32,6 +32,12 @@ func main() {
 		for _, mdl := range mdls {
 			mshs := studio.NewMeshes(mdl.GetMeshesBuf(buf), int(mdl.NumMesh))
 			fmt.Printf("%# v\n", pretty.Formatter(mshs))
+
+			// read tris
+			for _, msh := range mshs {
+				tris := studio.NewTris(msh.GetTrisBuf(buf))
+				fmt.Printf("%# v\n", pretty.Formatter(tris))
+			}
 		}
 	}
 }
