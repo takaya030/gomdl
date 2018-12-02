@@ -28,7 +28,7 @@ func NewBodyParts(buf []byte, num int) []BodyPart {
 	return b
 }
 
-func (b *BodyPart) GetSubModelsBuf(buf []byte) []byte {
+func (b *BodyPart) GetModelsBuf(buf []byte) []byte {
 	s := int(b.ModelIndex)
 	e := s + int(unsafe.Sizeof(Model{}))*int(b.NumModels)
 
