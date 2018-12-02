@@ -87,15 +87,6 @@ type Texture struct {
 	Index  int32
 }
 
-// meshes
-type Mesh struct {
-	NumTris   int32
-	TriIndex  int32
-	SkinRef   int32
-	NumNorms  int32 // per mesh normals
-	NormIndex int32 // normal vec3_t
-}
-
 // demand loaded sequence groups
 type SeqGroup struct {
 	Label   [32]byte // textual name
