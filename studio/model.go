@@ -5,6 +5,8 @@ import (
 	"encoding/binary"
 	"fmt"
 	"unsafe"
+
+	"github.com/go-gl/mathgl/mgl32"
 )
 
 // studio models
@@ -52,6 +54,13 @@ func (m *Model) GetMeshesBuf(buf []byte) []byte {
 func (m *Model) GetVertInfosBuf(buf []byte) []byte {
 	s := int(m.VertInfoIndex)
 	e := s + int(m.NumVerts)
+
+	return buf[s:e]
+}
+
+func (m *Model) GetVertsBuf(buf []byte) []byte {
+	s := int(m.VertIndex)
+	e := s + int(unsafe.Sizeof(mgl32.Vec3{}))*int(m.NumVerts)
 
 	return buf[s:e]
 }
