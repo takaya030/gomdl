@@ -48,3 +48,10 @@ func (m *Model) GetMeshesBuf(buf []byte) []byte {
 
 	return buf[s:e]
 }
+
+func (m *Model) GetVertInfosBuf(buf []byte) []byte {
+	s := int(m.VertInfoIndex)
+	e := s + int(m.NumVerts)
+
+	return buf[s:e]
+}
