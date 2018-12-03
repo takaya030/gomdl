@@ -64,3 +64,10 @@ func (m *Model) GetVertsBuf(buf []byte) []byte {
 
 	return buf[s:e]
 }
+
+func (m *Model) GetVNormInfosBuf(buf []byte) []byte {
+	s := int(m.NormInfoIndex)
+	e := s + int(m.NumNorms)
+
+	return buf[s:e]
+}
