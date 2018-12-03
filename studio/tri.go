@@ -44,12 +44,12 @@ func NewTris(buf []byte) []Tri {
 
 	for {
 		t := new(Tri)
-		cmd := t.Read(r)
-		tris = append(tris, *t)
 
-		if cmd == 0 {
+		if cmd := t.Read(r); cmd == 0 {
 			break
 		}
+
+		tris = append(tris, *t)
 	}
 
 	return tris
