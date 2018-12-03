@@ -71,3 +71,10 @@ func (m *Model) GetVNormInfosBuf(buf []byte) []byte {
 
 	return buf[s:e]
 }
+
+func (m *Model) GetNormsBuf(buf []byte) []byte {
+	s := int(m.NormIndex)
+	e := s + int(unsafe.Sizeof(mgl32.Vec3{}))*int(m.NumNorms)
+
+	return buf[s:e]
+}
