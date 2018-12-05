@@ -96,7 +96,7 @@ func (h *Hdr) GetHitBoxesBuf(buf []byte) []byte {
 	return buf[s:e]
 }
 
-func (h *Hdr) GetSeqBuf(buf []byte) []byte {
+func (h *Hdr) GetSeqsBuf(buf []byte) []byte {
 	s := int(h.SeqIndex)
 	e := s + int(unsafe.Sizeof(SeqDesc{}))*int(h.NumSeq)
 
