@@ -1,6 +1,9 @@
 package studio
 
 import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
 	"unsafe"
 
 	"github.com/go-gl/mathgl/mgl32"
@@ -61,6 +64,19 @@ type Event struct {
 // animations
 type Anim struct {
 	Offset [6]uint16
+}
+
+func NewSeqDescs(buf []byte, num int) []SeqDesc {
+	s := make([]SeqDesc, num)
+	r := bytes.NewReader(buf)
+
+	// read seqdescs
+	if err := binary.Read(r, binary.LittleEndian, s); err != nil {
+		fmt.Print(err)
+		return []SeqDesc{}
+	}
+
+	return s
 }
 
 func (seq *SeqDesc) GetEventsBuf(buf []byte) []byte {

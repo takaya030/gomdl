@@ -40,4 +40,8 @@ func main() {
 			}
 		}
 	}
+
+	// read seqdescs
+	seq := studio.NewSeqDescs(h.GetSeqsBuf(buf), int(h.NumSeq))
+	fmt.Printf("%# v\n", pretty.Formatter(seq))
 }
