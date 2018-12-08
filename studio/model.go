@@ -51,7 +51,7 @@ func (m *Model) GetMeshesBuf(buf []byte) []byte {
 	return buf[s:e]
 }
 
-func (m *Model) GetVertInfosBuf(buf []byte) []byte {
+func (m *Model) GetVertInfos(buf []byte) []byte {
 	s := int(m.VertInfoIndex)
 	e := s + int(m.NumVerts)
 
@@ -65,7 +65,7 @@ func (m *Model) GetVertsBuf(buf []byte) []byte {
 	return buf[s:e]
 }
 
-func (m *Model) GetVNormInfosBuf(buf []byte) []byte {
+func (m *Model) GetNormInfos(buf []byte) []byte {
 	s := int(m.NormInfoIndex)
 	e := s + int(m.NumNorms)
 
