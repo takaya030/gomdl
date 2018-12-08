@@ -1,0 +1,86 @@
+package mdl
+
+import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
+
+	"github.com/takaya030/gomdl/studio"
+)
+
+// unpacked mdl data
+type MdlData struct {
+	Hdr             *studio.Hdr
+	Bones           []studio.Bone
+	BoneControllers []studio.BoneController
+	BBoxes          []studio.BBox
+	SeqDescs        []studio.SeqDesc
+	SeqGroups       []studio.SeqGroup
+	BodyParts       []BodyPart
+	//Attachments     []studio.Attachment
+	//Textures        []studio.Texture // skin info
+	//SkinRefs        []int16
+}
+
+func NewMdlData(buf []byte) *MdlData {
+	md := new(MdlData)
+
+	// read hdr
+	h := studio.NewHdr(buf)
+	md.Hdr = h
+
+	// read bones
+	md.Bones = make([]studio.Bone, int(h.NumBones))
+	r := bytes.NewReader(h.GetBonesBuf(buf))
+
+	if err := binary.Read(r, binary.LittleEndian, md.Bones); err != nil {
+		fmt.Print(err)
+		return md
+	}
+
+	// read bonecontrollers
+	md.BoneControllers = make([]studio.BoneController, int(h.NumBoneControllers))
+	r = bytes.NewReader(h.GetBoneControllersBuf(buf))
+
+	if err := binary.Read(r, binary.LittleEndian, md.BoneControllers); err != nil {
+		fmt.Print(err)
+		return md
+	}
+
+	// read bboxes
+	md.BBoxes = make([]studio.BBox, int(h.NumHitBoxes))
+	r = bytes.NewReader(h.GetHitBoxesBuf(buf))
+
+	if err := binary.Read(r, binary.LittleEndian, md.BBoxes); err != nil {
+		fmt.Print(err)
+		return md
+	}
+
+	// read seqdesc
+	md.SeqDescs = make([]studio.SeqDesc, int(h.NumSeq))
+	r = bytes.NewReader(h.GetSeqsBuf(buf))
+
+	if err := binary.Read(r, binary.LittleEndian, md.SeqDescs); err != nil {
+		fmt.Print(err)
+		return md
+	}
+
+	// read seqgroups
+	md.SeqGroups = make([]studio.SeqGroup, int(h.NumSeqGroups))
+	r = bytes.NewReader(h.GetSeqGroupsBuf(buf))
+
+	if err := binary.Read(r, binary.LittleEndian, md.SeqGroups); err != nil {
+		fmt.Print(err)
+		return md
+	}
+
+	// read bodyparts
+	bps := studio.NewBodyParts(h.GetBodyPartsBuf(buf), int(h.NumBodyParts))
+	// read mdl.BodyPart
+	for _, bp := range bps {
+
+		md.BodyParts = append(md.BodyParts, *NewBodyPart(buf, &bp))
+	}
+
+	return md
+}
