@@ -24,18 +24,11 @@ func main() {
 	bps := studio.NewBodyParts(h.GetBodyPartsBuf(buf), int(h.NumBodyParts))
 	fmt.Printf("%# v\n", pretty.Formatter(bps))
 
-	// read models
+	// read mdl.BodyPart
 	for _, bp := range bps {
-		models := studio.NewModels(bp.GetModelsBuf(buf), int(bp.NumModels))
-		fmt.Printf("%# v\n", pretty.Formatter(models))
 
-		// read meshes
-		for _, model := range models {
-
-			// read mdl.Model
-			mdlmodel := mdl.NewModel( buf, &model )
-			fmt.Printf("%# v\n", pretty.Formatter(*mdlmodel))
-		}
+		mdlbodypart := mdl.NewBodyPart( buf, &bp )
+		fmt.Printf("%# v\n", pretty.Formatter(*mdlbodypart))
 	}
 
 	// read seqdescs
