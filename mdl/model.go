@@ -1,9 +1,9 @@
 package mdl
 
 import (
-	"fmt"
 	"bytes"
 	"encoding/binary"
+	"fmt"
 	"github.com/go-gl/mathgl/mgl32"
 
 	"github.com/takaya030/gomdl/studio"
@@ -17,12 +17,12 @@ type Model struct {
 
 	BoundingRadius float32
 
-	Meshes		[]Mesh
+	Meshes []Mesh
 
-	VertInfos	[]byte
-	Verts		[]mgl32.Vec3
-	NormInfos	[]byte
-	Norms		[]mgl32.Vec3
+	VertInfos []byte
+	Verts     []mgl32.Vec3
+	NormInfos []byte
+	Norms     []mgl32.Vec3
 }
 
 func NewModel(buf []byte, model *studio.Model) *Model {
@@ -36,14 +36,14 @@ func NewModel(buf []byte, model *studio.Model) *Model {
 	mshs := studio.NewMeshes(model.GetMeshesBuf(buf), int(model.NumMesh))
 	// read mdl.Mesh
 	for _, msh := range mshs {
-		m.Meshes = append( m.Meshes, *NewMesh(buf, &msh) )
+		m.Meshes = append(m.Meshes, *NewMesh(buf, &msh))
 	}
 
 	m.VertInfos = model.GetVertInfos(buf)
 
 	// read verts
 	m.Verts = make([]mgl32.Vec3, model.NumVerts)
-	r := bytes.NewReader( model.GetVertsBuf(buf) )
+	r := bytes.NewReader(model.GetVertsBuf(buf))
 
 	if err := binary.Read(r, binary.LittleEndian, m.Verts); err != nil {
 		fmt.Print(err)
@@ -54,7 +54,7 @@ func NewModel(buf []byte, model *studio.Model) *Model {
 
 	// read norms
 	m.Norms = make([]mgl32.Vec3, model.NumNorms)
-	r2 := bytes.NewReader( model.GetNormsBuf(buf) )
+	r2 := bytes.NewReader(model.GetNormsBuf(buf))
 
 	if err := binary.Read(r2, binary.LittleEndian, m.Norms); err != nil {
 		fmt.Print(err)

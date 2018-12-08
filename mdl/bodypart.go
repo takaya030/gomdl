@@ -10,7 +10,7 @@ type BodyPart struct {
 
 	Base int32
 
-	Models		[]Model
+	Models []Model
 }
 
 func NewBodyPart(buf []byte, sbp *studio.BodyPart) *BodyPart {
@@ -24,7 +24,7 @@ func NewBodyPart(buf []byte, sbp *studio.BodyPart) *BodyPart {
 	for _, model := range models {
 
 		// read mdl.Model
-		b.Models = append( b.Models, *NewModel( buf, &model ) )
+		b.Models = append(b.Models, *NewModel(buf, &model))
 	}
 
 	return b
