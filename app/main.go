@@ -5,6 +5,7 @@ import (
 	"github.com/kr/pretty"
 	"io/ioutil"
 
+	"github.com/takaya030/gomdl/mdl"
 	"github.com/takaya030/gomdl/studio"
 )
 
@@ -25,23 +26,21 @@ func main() {
 
 	// read models
 	for _, bp := range bps {
-		mdls := studio.NewModels(bp.GetModelsBuf(buf), int(bp.NumModels))
-		fmt.Printf("%# v\n", pretty.Formatter(mdls))
+		models := studio.NewModels(bp.GetModelsBuf(buf), int(bp.NumModels))
+		fmt.Printf("%# v\n", pretty.Formatter(models))
 
 		// read meshes
-		for _, mdl := range mdls {
-			mshs := studio.NewMeshes(mdl.GetMeshesBuf(buf), int(mdl.NumMesh))
-			fmt.Printf("%# v\n", pretty.Formatter(mshs))
+		for _, model := range models {
 
-			// read tris
-			for _, msh := range mshs {
-				tris := studio.NewTris(msh.GetTrisBuf(buf))
-				fmt.Printf("%# v\n", pretty.Formatter(tris))
-			}
+			// read mdl.Model
+			mdlmodel := mdl.NewModel( buf, &model )
+			fmt.Printf("%# v\n", pretty.Formatter(*mdlmodel))
 		}
 	}
 
 	// read seqdescs
-	seq := studio.NewSeqDescs(h.GetSeqsBuf(buf), int(h.NumSeq))
-	fmt.Printf("%# v\n", pretty.Formatter(seq))
+	/*
+		seq := studio.NewSeqDescs(h.GetSeqsBuf(buf), int(h.NumSeq))
+		fmt.Printf("%# v\n", pretty.Formatter(seq))
+	*/
 }
