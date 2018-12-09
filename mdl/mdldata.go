@@ -14,7 +14,7 @@ type MdlData struct {
 	Bones           []studio.Bone
 	BoneControllers []studio.BoneController
 	BBoxes          []studio.BBox
-	SeqDescs        []studio.SeqDesc
+	SeqDescs        []SeqDesc
 	SeqGroups       []studio.SeqGroup
 	BodyParts       []BodyPart
 	//Attachments     []studio.Attachment
@@ -57,12 +57,11 @@ func NewMdlData(buf []byte) *MdlData {
 	}
 
 	// read seqdesc
-	md.SeqDescs = make([]studio.SeqDesc, int(h.NumSeq))
-	r = bytes.NewReader(h.GetSeqsBuf(buf))
+	sds := studio.NewSeqDescs(h.GetSeqsBuf(buf), int(h.NumSeq))
+	// read mdl.SeqDesc
+	for _, sd := range sds {
 
-	if err := binary.Read(r, binary.LittleEndian, md.SeqDescs); err != nil {
-		fmt.Print(err)
-		return md
+		md.SeqDescs = append(md.SeqDescs, *NewSeqDesc(buf, &sd, int(h.NumBones)))
 	}
 
 	// read seqgroups
