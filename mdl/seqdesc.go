@@ -10,9 +10,9 @@ import (
 
 // unpacked seqdesc
 type SeqDesc struct {
-	Seq		studio.SeqDesc
+	Seq studio.SeqDesc
 
-	Anims	[][]studio.Anim
+	Anims [][]studio.Anim
 }
 
 func NewSeqDesc(buf []byte, sd *studio.SeqDesc, numbones int) *SeqDesc {
@@ -24,7 +24,7 @@ func NewSeqDesc(buf []byte, sd *studio.SeqDesc, numbones int) *SeqDesc {
 	s.Anims = make([][]studio.Anim, int(sd.NumBlends))
 	r := bytes.NewReader(sd.GetAnimBuf(buf, numbones))
 
-	for i:=0; i<int(sd.NumBlends); i++ {
+	for i := 0; i < int(sd.NumBlends); i++ {
 		s.Anims[i] = make([]studio.Anim, numbones)
 
 		if err := binary.Read(r, binary.LittleEndian, s.Anims[i]); err != nil {
