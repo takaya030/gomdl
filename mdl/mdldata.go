@@ -18,8 +18,8 @@ type MdlData struct {
 	SeqGroups       []studio.SeqGroup
 	BodyParts       []BodyPart
 	Attachments     []studio.Attachment
+	SkinRefs        []int16
 	//Textures        []studio.Texture // skin info
-	//SkinRefs        []int16
 }
 
 func NewMdlData(buf []byte) *MdlData {
@@ -86,6 +86,15 @@ func NewMdlData(buf []byte) *MdlData {
 	r = bytes.NewReader(h.GetAttachmentsBuf(buf))
 
 	if err := binary.Read(r, binary.LittleEndian, md.Attachments); err != nil {
+		fmt.Print(err)
+		return md
+	}
+
+	// read skinrefs
+	md.SkinRefs = make([]int16, int(h.NumSkinRef))
+	r = bytes.NewReader(h.GetSkinRefBuf(buf))
+
+	if err := binary.Read(r, binary.LittleEndian, md.SkinRefs); err != nil {
 		fmt.Print(err)
 		return md
 	}
