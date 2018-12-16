@@ -17,7 +17,7 @@ type MdlData struct {
 	SeqDescs        []SeqDesc
 	SeqGroups       []studio.SeqGroup
 	BodyParts       []BodyPart
-	//Attachments     []studio.Attachment
+	Attachments     []studio.Attachment
 	//Textures        []studio.Texture // skin info
 	//SkinRefs        []int16
 }
@@ -79,6 +79,15 @@ func NewMdlData(buf []byte) *MdlData {
 	for _, bp := range bps {
 
 		md.BodyParts = append(md.BodyParts, *NewBodyPart(buf, &bp))
+	}
+
+	// read attachments
+	md.Attachments = make([]studio.Attachment, int(h.NumAttachments))
+	r = bytes.NewReader(h.GetAttachmentsBuf(buf))
+
+	if err := binary.Read(r, binary.LittleEndian, md.Attachments); err != nil {
+		fmt.Print(err)
+		return md
 	}
 
 	return md
