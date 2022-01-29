@@ -4,12 +4,14 @@ import (
 	//"bytes"
 	//"encoding/binary"
 	//"fmt"
+	"unsafe"
 
 	"github.com/takaya030/gomdl/studio"
 )
 
 // unpacked mdl data
 type MdlData struct {
+	BaseBuf         *byte
 	Hdr             *studio.Hdr
 	Bones           *byte
 	BoneControllers *byte
@@ -24,6 +26,9 @@ type MdlData struct {
 
 func NewMdlData(buf []byte) *MdlData {
 	md := new(MdlData)
+
+	// base buffer
+	md.BaseBuf = (*byte)(unsafe.Pointer(&buf[0]))
 
 	// read hdr
 	h := studio.NewHdr(buf)
