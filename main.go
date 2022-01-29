@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"github.com/kr/pretty"
 	"io/ioutil"
-	"unsafe"
+	//"unsafe"
 
-	//"github.com/takaya030/gomdl/mdl"
-	"github.com/takaya030/gomdl/studio"
+	"github.com/takaya030/gomdl/mdl"
+	//"github.com/takaya030/gomdl/studio"
 )
 
 func main() {
@@ -18,14 +18,14 @@ func main() {
 	}
 
 	// cast hdr
+	/*
 	p_Hdr := (*studio.Hdr)(unsafe.Pointer(&buf[0]))
 	fmt.Printf("%# v\n", pretty.Formatter(*p_Hdr))
+	*/
 
 	// read mdldata
-	/*
 	md := mdl.NewMdlData(buf)
-	fmt.Printf("%# v\n", pretty.Formatter(*md))
-	*/
+	fmt.Printf("%# v\n", pretty.Formatter(*md.Hdr))
 
 	// read seqdescs
 	/*

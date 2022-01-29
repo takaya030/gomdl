@@ -1,9 +1,9 @@
 package studio
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
+	//"bytes"
+	//"encoding/binary"
+	//"fmt"
 	"unsafe"
 
 	//"github.com/go-gl/mathgl/mgl32"
@@ -63,14 +63,7 @@ type Hdr struct {
 }
 
 func NewHdr(buf []byte) *Hdr {
-	h := new(Hdr)
-	r := bytes.NewReader(buf)
-
-	// read hdr
-	if err := binary.Read(r, binary.LittleEndian, h); err != nil {
-		fmt.Print(err)
-		return nil
-	}
+	h := (*Hdr)(unsafe.Pointer(&buf[0]))
 
 	return h
 }

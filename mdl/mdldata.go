@@ -1,9 +1,9 @@
 package mdl
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
+	//"bytes"
+	//"encoding/binary"
+	//"fmt"
 
 	"github.com/takaya030/gomdl/studio"
 )
@@ -11,6 +11,7 @@ import (
 // unpacked mdl data
 type MdlData struct {
 	Hdr             *studio.Hdr
+	/*
 	Bones           []studio.Bone
 	BoneControllers []studio.BoneController
 	BBoxes          []studio.BBox
@@ -20,6 +21,7 @@ type MdlData struct {
 	Attachments     []studio.Attachment
 	Textures        []studio.Texture // skin info
 	SkinRefs        []int16
+	*/
 }
 
 func NewMdlData(buf []byte) *MdlData {
@@ -29,6 +31,7 @@ func NewMdlData(buf []byte) *MdlData {
 	h := studio.NewHdr(buf)
 	md.Hdr = h
 
+	/*
 	// read bones
 	md.Bones = make([]studio.Bone, int(h.NumBones))
 	r := bytes.NewReader(h.GetBonesBuf(buf))
@@ -107,6 +110,7 @@ func NewMdlData(buf []byte) *MdlData {
 		fmt.Print(err)
 		return md
 	}
+	*/
 
 	return md
 }
