@@ -11,17 +11,15 @@ import (
 // unpacked mdl data
 type MdlData struct {
 	Hdr             *studio.Hdr
-	/*
-	Bones           []studio.Bone
-	BoneControllers []studio.BoneController
-	BBoxes          []studio.BBox
-	SeqDescs        []SeqDesc
-	SeqGroups       []studio.SeqGroup
-	BodyParts       []BodyPart
-	Attachments     []studio.Attachment
-	Textures        []studio.Texture // skin info
-	SkinRefs        []int16
-	*/
+	Bones           *byte
+	BoneControllers *byte
+	BBoxes          *byte
+	SeqDescs        *byte
+	SeqGroups       *byte
+	BodyParts       *byte
+	Attachments     *byte
+	Textures        *byte
+	SkinRefs        *byte
 }
 
 func NewMdlData(buf []byte) *MdlData {
@@ -31,86 +29,32 @@ func NewMdlData(buf []byte) *MdlData {
 	h := studio.NewHdr(buf)
 	md.Hdr = h
 
-	/*
 	// read bones
-	md.Bones = make([]studio.Bone, int(h.NumBones))
-	r := bytes.NewReader(h.GetBonesBuf(buf))
-
-	if err := binary.Read(r, binary.LittleEndian, md.Bones); err != nil {
-		fmt.Print(err)
-		return md
-	}
+	md.Bones = h.GetBonesPtr(buf)
 
 	// read bonecontrollers
-	md.BoneControllers = make([]studio.BoneController, int(h.NumBoneControllers))
-	r = bytes.NewReader(h.GetBoneControllersBuf(buf))
-
-	if err := binary.Read(r, binary.LittleEndian, md.BoneControllers); err != nil {
-		fmt.Print(err)
-		return md
-	}
+	md.BoneControllers = h.GetBoneControllersPtr(buf)
 
 	// read bboxes
-	md.BBoxes = make([]studio.BBox, int(h.NumHitBoxes))
-	r = bytes.NewReader(h.GetHitBoxesBuf(buf))
-
-	if err := binary.Read(r, binary.LittleEndian, md.BBoxes); err != nil {
-		fmt.Print(err)
-		return md
-	}
+	md.BBoxes = h.GetHitBoxesPtr(buf)
 
 	// read seqdesc
-	sds := studio.NewSeqDescs(h.GetSeqsBuf(buf), int(h.NumSeq))
-	// read mdl.SeqDesc
-	for _, sd := range sds {
-
-		md.SeqDescs = append(md.SeqDescs, *NewSeqDesc(buf, &sd, int(h.NumBones)))
-	}
+	md.SeqDescs = h.GetSeqsPtr(buf)
 
 	// read seqgroups
-	md.SeqGroups = make([]studio.SeqGroup, int(h.NumSeqGroups))
-	r = bytes.NewReader(h.GetSeqGroupsBuf(buf))
-
-	if err := binary.Read(r, binary.LittleEndian, md.SeqGroups); err != nil {
-		fmt.Print(err)
-		return md
-	}
+	md.SeqGroups = h.GetSeqGroupsPtr(buf)
 
 	// read bodyparts
-	bps := studio.NewBodyParts(h.GetBodyPartsBuf(buf), int(h.NumBodyParts))
-	// read mdl.BodyPart
-	for _, bp := range bps {
-
-		md.BodyParts = append(md.BodyParts, *NewBodyPart(buf, &bp))
-	}
+	md.BodyParts = h.GetBodyPartsPtr(buf)
 
 	// read attachments
-	md.Attachments = make([]studio.Attachment, int(h.NumAttachments))
-	r = bytes.NewReader(h.GetAttachmentsBuf(buf))
-
-	if err := binary.Read(r, binary.LittleEndian, md.Attachments); err != nil {
-		fmt.Print(err)
-		return md
-	}
+	md.Attachments = h.GetAttachmentsPtr(buf)
 
 	// read textures
-	md.Textures = make([]studio.Texture, int(h.NumTextures))
-	r = bytes.NewReader(h.GetTexturesBuf(buf))
-
-	if err := binary.Read(r, binary.LittleEndian, md.Textures); err != nil {
-		fmt.Print(err)
-		return md
-	}
+	md.Textures = h.GetTexturesPtr(buf)
 
 	// read skinrefs
-	md.SkinRefs = make([]int16, int(h.NumSkinRef))
-	r = bytes.NewReader(h.GetSkinRefBuf(buf))
-
-	if err := binary.Read(r, binary.LittleEndian, md.SkinRefs); err != nil {
-		fmt.Print(err)
-		return md
-	}
-	*/
+	md.SkinRefs = h.GetSkinRefPtr(buf)
 
 	return md
 }

@@ -68,65 +68,62 @@ func NewHdr(buf []byte) *Hdr {
 	return h
 }
 
-func (h *Hdr) GetBonesBuf(buf []byte) []byte {
-	s := int(h.BoneIndex)
-	e := s + int(unsafe.Sizeof(Bone{}))*int(h.NumBones)
+func (h *Hdr) GetBonesPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.BoneIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetBoneControllersBuf(buf []byte) []byte {
-	s := int(h.BoneControllerIndex)
-	e := s + int(unsafe.Sizeof(BoneController{}))*int(h.NumBoneControllers)
+func (h *Hdr) GetBoneControllersPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.BoneControllerIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetHitBoxesBuf(buf []byte) []byte {
-	s := int(h.HitBoxIndex)
-	e := s + int(unsafe.Sizeof(BBox{}))*int(h.NumHitBoxes)
+func (h *Hdr) GetHitBoxesPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.HitBoxIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetSeqsBuf(buf []byte) []byte {
-	s := int(h.SeqIndex)
-	e := s + int(unsafe.Sizeof(SeqDesc{}))*int(h.NumSeq)
+func (h *Hdr) GetSeqsPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.SeqIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetSeqGroupsBuf(buf []byte) []byte {
-	s := int(h.SeqGroupIndex)
-	e := s + int(unsafe.Sizeof(SeqGroup{}))*int(h.NumSeqGroups)
+func (h *Hdr) GetSeqGroupsPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.SeqGroupIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetTexturesBuf(buf []byte) []byte {
-	s := int(h.TextureIndex)
-	e := s + int(unsafe.Sizeof(Texture{}))*int(h.NumTextures)
+func (h *Hdr) GetTexturesPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.TextureIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetSkinRefBuf(buf []byte) []byte {
-	s := int(h.SkinIndex)
-	e := s + int(unsafe.Sizeof(int16(0)))*int(h.NumSkinRef)
+func (h *Hdr) GetTextureDataPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.TextureDataIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetBodyPartsBuf(buf []byte) []byte {
-	s := int(h.BodyPartIndex)
-	e := s + int(unsafe.Sizeof(BodyPart{}))*int(h.NumBodyParts)
+func (h *Hdr) GetSkinRefPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.SkinIndex))
 
-	return buf[s:e]
+	return pb
 }
 
-func (h *Hdr) GetAttachmentsBuf(buf []byte) []byte {
-	s := int(h.AttachmentIndex)
-	e := s + int(unsafe.Sizeof(Attachment{}))*int(h.NumAttachments)
+func (h *Hdr) GetBodyPartsPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.BodyPartIndex))
 
-	return buf[s:e]
+	return pb
+}
+
+func (h *Hdr) GetAttachmentsPtr(buf []byte) *byte {
+	pb := (*byte)(unsafe.Add(unsafe.Pointer(&buf[0]), h.AttachmentIndex))
+
+	return pb
 }

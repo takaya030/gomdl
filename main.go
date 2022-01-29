@@ -25,7 +25,7 @@ func main() {
 
 	// read mdldata
 	md := mdl.NewMdlData(buf)
-	fmt.Printf("%# v\n", pretty.Formatter(*md.Hdr))
+	fmt.Printf("%# v\n", pretty.Formatter(*md))
 
 	// read seqdescs
 	/*
