@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/go-gl/mathgl/mgl32"
+	//"github.com/go-gl/mathgl/mgl32"
 )
 
 type Hdr struct {
@@ -15,12 +15,12 @@ type Hdr struct {
 	Name    [64]byte
 	Length  int32
 
-	EyePosition mgl32.Vec3 // ideal eye position
-	Min         mgl32.Vec3 // ideal movement hull size
-	Max         mgl32.Vec3
+	EyePosition Vec3 // ideal eye position
+	Min         Vec3 // ideal movement hull size
+	Max         Vec3
 
-	BbMin mgl32.Vec3 // clipping bounding box
-	BbMax mgl32.Vec3
+	BbMin Vec3 // clipping bounding box
+	BbMax Vec3
 
 	Flags int32
 

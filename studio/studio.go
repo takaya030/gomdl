@@ -1,7 +1,7 @@
 package studio
 
 import (
-	"github.com/go-gl/mathgl/mgl32"
+	//"github.com/go-gl/mathgl/mgl32"
 )
 
 // lighting options (set Texture.Flags)
@@ -43,6 +43,9 @@ const (
 	SIZEOF_ANIMVALUE = 2
 )
 
+type Vec3 [3]float32
+type Vec4 [4]float32
+
 type Bone struct {
 	Name           [32]byte   // bone name for symbolic links
 	Parent         int32      // parent bone
@@ -64,9 +67,9 @@ type BoneController struct {
 // intersection boxes
 type BBox struct {
 	Bone  int32
-	Group int32      // intersection group
-	BbMin mgl32.Vec3 // bounding box
-	BbMax mgl32.Vec3
+	Group int32  // intersection group
+	BbMin Vec3   // bounding box
+	BbMax Vec3
 }
 
 // attachment
@@ -74,8 +77,8 @@ type Attachment struct {
 	Name    [32]byte
 	Type    int32
 	Bone    int32
-	Org     mgl32.Vec3 // attachment point
-	Vectors [3]mgl32.Vec3
+	Org     Vec3  // attachment point
+	Vectors [3]Vec3
 }
 
 // skin info

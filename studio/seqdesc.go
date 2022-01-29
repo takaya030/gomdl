@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/go-gl/mathgl/mgl32"
+	//"github.com/go-gl/mathgl/mgl32"
 )
 
 // sequence descriptions
@@ -29,12 +29,12 @@ type SeqDesc struct {
 
 	MotionType         int32
 	MotionBone         int32
-	LinearMovement     mgl32.Vec3
+	LinearMovement     Vec3
 	AutoMovePosIndex   int32
 	AutoMoveAngleIndex int32
 
-	BbMin mgl32.Vec3 // per sequence bounding box
-	BbMax mgl32.Vec3
+	BbMin Vec3 // per sequence bounding box
+	BbMax Vec3
 
 	NumBlends int32
 	AnimIndex int32 // mstudioanim_t pointer relative to start of sequence group data [blend][bone][X, Y, Z, XR, YR, ZR]

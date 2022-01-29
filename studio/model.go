@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/go-gl/mathgl/mgl32"
+	//"github.com/go-gl/mathgl/mgl32"
 )
 
 // studio models
@@ -60,7 +60,7 @@ func (m *Model) GetVertInfos(buf []byte) []byte {
 
 func (m *Model) GetVertsBuf(buf []byte) []byte {
 	s := int(m.VertIndex)
-	e := s + int(unsafe.Sizeof(mgl32.Vec3{}))*int(m.NumVerts)
+	e := s + int(unsafe.Sizeof(Vec3{}))*int(m.NumVerts)
 
 	return buf[s:e]
 }
@@ -74,7 +74,7 @@ func (m *Model) GetNormInfos(buf []byte) []byte {
 
 func (m *Model) GetNormsBuf(buf []byte) []byte {
 	s := int(m.NormIndex)
-	e := s + int(unsafe.Sizeof(mgl32.Vec3{}))*int(m.NumNorms)
+	e := s + int(unsafe.Sizeof(Vec3{}))*int(m.NumNorms)
 
 	return buf[s:e]
 }
