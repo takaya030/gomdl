@@ -1,9 +1,9 @@
 package studio
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
+	//"bytes"
+	//"encoding/binary"
+	//"fmt"
 	//"unsafe"
 )
 
@@ -16,6 +16,7 @@ type Mesh struct {
 	NormIndex int32 // normal vec3_t (no use)
 }
 
+/*
 func NewMeshes(buf []byte, num int) []Mesh {
 	m := make([]Mesh, num)
 	r := bytes.NewReader(buf)
@@ -34,3 +35,4 @@ func (m *Mesh) GetTrisBuf(buf []byte) []byte {
 
 	return buf[s:]
 }
+*/

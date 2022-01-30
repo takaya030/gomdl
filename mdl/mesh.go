@@ -10,6 +10,7 @@ type Mesh struct {
 	Tris    []studio.Tri
 }
 
+/*
 func NewMesh(buf []byte, msh *studio.Mesh) *Mesh {
 	m := new(Mesh)
 
@@ -20,3 +21,4 @@ func NewMesh(buf []byte, msh *studio.Mesh) *Mesh {
 
 	return m
 }
+*/

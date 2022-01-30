@@ -16,6 +16,7 @@ type BodyPart struct {
 func NewBodyPart(buf []byte, sbp *studio.BodyPart) *BodyPart {
 	b := new(BodyPart)
 
+	/*
 	b.Name = sbp.Name
 	b.Base = sbp.Base
 
@@ -26,6 +27,7 @@ func NewBodyPart(buf []byte, sbp *studio.BodyPart) *BodyPart {
 		// read mdl.Model
 		b.Models = append(b.Models, *NewModel(buf, &model))
 	}
+	*/
 
 	return b
 }
