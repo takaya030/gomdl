@@ -1,9 +1,9 @@
 package studio
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
+	//"bytes"
+	//"encoding/binary"
+	//"fmt"
 	"unsafe"
 
 	//"github.com/go-gl/mathgl/mgl32"
@@ -31,6 +31,13 @@ type Model struct {
 	GroupIndex int32
 }
 
+func (md *Model) GetMesh(basebuf *byte, idx int) *Mesh {
+	pmh := (*Mesh)(unsafe.Add(unsafe.Pointer(basebuf), (int)(md.MeshIndex) + (int)(unsafe.Sizeof(Mesh{})) * idx))
+
+	return pmh
+}
+
+/*
 func NewModels(buf []byte, num int) []Model {
 	m := make([]Model, num)
 	r := bytes.NewReader(buf)
@@ -78,3 +85,4 @@ func (m *Model) GetNormsBuf(buf []byte) []byte {
 
 	return buf[s:e]
 }
+*/
