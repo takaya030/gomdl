@@ -64,6 +64,18 @@ func NewMdlData(buf []byte) *MdlData {
 	return md
 }
 
+func (md *MdlData) GetBone(idx int) *studio.Bone {
+	pbn := (*studio.Bone)(unsafe.Add(unsafe.Pointer(md.Bones), (int)(unsafe.Sizeof(studio.Bone{})) * idx))
+
+	return pbn
+}
+
+func (md *MdlData) GetBoneController(idx int) *studio.BoneController {
+	pbc := (*studio.BoneController)(unsafe.Add(unsafe.Pointer(md.BoneControllers), (int)(unsafe.Sizeof(studio.BoneController{})) * idx))
+
+	return pbc
+}
+
 func (md *MdlData) GetTexture(idx int) *studio.Texture {
 	ptx := (*studio.Texture)(unsafe.Add(unsafe.Pointer(md.Textures), (int)(unsafe.Sizeof(studio.Texture{})) * idx))
 
