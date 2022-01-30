@@ -1,9 +1,9 @@
 package studio
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
+	//"bytes"
+	//"encoding/binary"
+	//"fmt"
 	"unsafe"
 )
 
@@ -15,6 +15,13 @@ type BodyPart struct {
 	ModelIndex int32 // index into models array
 }
 
+func (b *BodyPart) GetModel(basebuf *byte, idx int) *Model {
+	pmd := (*Model)(unsafe.Add(unsafe.Pointer(basebuf), (int)(b.ModelIndex) + (int)(unsafe.Sizeof(Model{})) * idx))
+
+	return pmd
+}
+
+/*
 func NewBodyParts(buf []byte, num int) []BodyPart {
 	b := make([]BodyPart, num)
 	r := bytes.NewReader(buf)
@@ -34,3 +41,4 @@ func (b *BodyPart) GetModelsBuf(buf []byte) []byte {
 
 	return buf[s:e]
 }
+*/
