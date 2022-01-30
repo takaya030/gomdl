@@ -1,9 +1,9 @@
 package studio
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
+	//"bytes"
+	//"encoding/binary"
+	//"fmt"
 	"unsafe"
 
 	//"github.com/go-gl/mathgl/mgl32"
@@ -66,6 +66,13 @@ type Anim struct {
 	Offset [6]uint16
 }
 
+func (sd *SeqDesc) GetAnim(basebuf *byte, idx int) *Anim {
+	pan := (*Anim)(unsafe.Add(unsafe.Pointer(basebuf), (int)(sd.AnimIndex) + (int)(unsafe.Sizeof(Anim{})) * idx))
+
+	return pan
+}
+
+/*
 func NewSeqDescs(buf []byte, num int) []SeqDesc {
 	s := make([]SeqDesc, num)
 	r := bytes.NewReader(buf)
@@ -92,3 +99,4 @@ func (seq *SeqDesc) GetAnimBuf(buf []byte, numbones int) []byte {
 
 	return buf[s:e]
 }
+*/

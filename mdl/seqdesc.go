@@ -1,9 +1,9 @@
 package mdl
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
+	//"bytes"
+	//"encoding/binary"
+	//"fmt"
 
 	"github.com/takaya030/gomdl/studio"
 )
@@ -15,6 +15,7 @@ type SeqDesc struct {
 	Anims [][]studio.Anim
 }
 
+/*
 func NewSeqDesc(buf []byte, sd *studio.SeqDesc, numbones int) *SeqDesc {
 	s := new(SeqDesc)
 
@@ -35,3 +36,4 @@ func NewSeqDesc(buf []byte, sd *studio.SeqDesc, numbones int) *SeqDesc {
 
 	return s
 }
+*/
