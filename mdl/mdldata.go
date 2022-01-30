@@ -76,6 +76,24 @@ func (md *MdlData) GetBoneController(idx int) *studio.BoneController {
 	return pbc
 }
 
+func (md *MdlData) GetBBox(idx int) *studio.BBox {
+	pbb := (*studio.BBox)(unsafe.Add(unsafe.Pointer(md.BBoxes), (int)(unsafe.Sizeof(studio.BBox{})) * idx))
+
+	return pbb
+}
+
+func (md *MdlData) GetSeqDesc(idx int) *studio.SeqDesc {
+	psq := (*studio.SeqDesc)(unsafe.Add(unsafe.Pointer(md.SeqDescs), (int)(unsafe.Sizeof(studio.SeqDesc{})) * idx))
+
+	return psq
+}
+
+func (md *MdlData) GetSeqGroup(idx int) *studio.SeqGroup {
+	psg := (*studio.SeqGroup)(unsafe.Add(unsafe.Pointer(md.SeqGroups), (int)(unsafe.Sizeof(studio.SeqGroup{})) * idx))
+
+	return psg
+}
+
 func (md *MdlData) GetTexture(idx int) *studio.Texture {
 	ptx := (*studio.Texture)(unsafe.Add(unsafe.Pointer(md.Textures), (int)(unsafe.Sizeof(studio.Texture{})) * idx))
 
