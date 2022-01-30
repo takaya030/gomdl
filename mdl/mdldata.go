@@ -94,8 +94,27 @@ func (md *MdlData) GetSeqGroup(idx int) *studio.SeqGroup {
 	return psg
 }
 
+func (md *MdlData) GetBodyPart(idx int) *studio.BodyPart {
+	pbp := (*studio.BodyPart)(unsafe.Add(unsafe.Pointer(md.BodyParts), (int)(unsafe.Sizeof(studio.BodyPart{})) * idx))
+
+	return pbp
+}
+
+func (md *MdlData) GetAttachment(idx int) *studio.Attachment {
+	pat := (*studio.Attachment)(unsafe.Add(unsafe.Pointer(md.Attachments), (int)(unsafe.Sizeof(studio.Attachment{})) * idx))
+
+	return pat
+}
+
 func (md *MdlData) GetTexture(idx int) *studio.Texture {
 	ptx := (*studio.Texture)(unsafe.Add(unsafe.Pointer(md.Textures), (int)(unsafe.Sizeof(studio.Texture{})) * idx))
 
 	return ptx
+}
+
+func (md *MdlData) GetSkinRef(idx int) *int16 {
+	var a int16
+	psr := (*int16)(unsafe.Add(unsafe.Pointer(md.SkinRefs), (int)(unsafe.Sizeof(a)) * idx))
+
+	return psr
 }
