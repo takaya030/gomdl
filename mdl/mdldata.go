@@ -63,3 +63,9 @@ func NewMdlData(buf []byte) *MdlData {
 
 	return md
 }
+
+func (md *MdlData) GetTexture(idx int) *studio.Texture {
+	ptx := (*studio.Texture)(unsafe.Add(unsafe.Pointer(md.Textures), (int)(unsafe.Sizeof(studio.Texture{})) * idx))
+
+	return ptx
+}
