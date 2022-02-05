@@ -14,10 +14,11 @@ import (
 type MdlModel struct {
 	mdd	*MdlData
 
-	sequence	int32
-	frame 		float32
-	controller	[4]uint8
-	mouth		uint8
+	sequence	int32		// sequence index
+	frame 		float32		// frame
+	controller	[4]uint8	// bone controllers
+	mouth		uint8		// mouth position
+	blending	[2]uint8	// animation blending
 }
 
 func NewMdlModel(mdd *MdlData) *MdlModel {
@@ -150,4 +151,42 @@ func (mm *MdlModel) SetMouth(flval float32) float32 {
 	mm.mouth = (uint8)(setting)
 
 	return (float32)(setting) * (1.0 / 64.0) * (bc.End - bc.Start) + bc.Start
+}
+
+func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
+	var seq *studio.SeqDesc = mm.mdd.GetSeqDesc((int)(mm.sequence))
+
+	if seq.BlendType[iblender] == 0 {
+		return flval
+	}
+
+	if (seq.BlendType[iblender] & (studio.STUDIO_XR | studio.STUDIO_YR | studio.STUDIO_ZR)) != 0 {
+
+		// invert value if end < start
+		if seq.BlendEnd[iblender] < seq.BlendStart[iblender] {
+			flval = -flval
+		}
+
+		// does the controller not wrap?
+		if seq.BlendStart[iblender] + 359.0 >= seq.BlendEnd[iblender] {
+			if flval > ((seq.BlendStart[iblender] + seq.BlendEnd[iblender]) / 2.0) + 180 {
+				flval = flval - 360
+			}
+			if flval < ((seq.BlendStart[iblender] + seq.BlendEnd[iblender]) / 2.0) - 180 {
+				flval = flval + 360
+			}
+		}
+	}
+
+	var setting int = (int)(math32.Floor(255 * (flval - seq.BlendStart[iblender]) / (seq.BlendEnd[iblender] - seq.BlendStart[iblender])))
+
+	if setting < 0 {
+		setting = 0
+	}
+	if setting > 255 {
+		setting = 255
+	}
+	mm.blending[iblender] = (uint8)(setting)
+
+	return (float32)(setting) * (1.0 / 255.0) * (seq.BlendEnd[iblender] - seq.BlendStart[iblender]) + seq.BlendStart[iblender]
 }
