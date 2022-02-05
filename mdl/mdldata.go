@@ -120,5 +120,9 @@ func (md *MdlData) GetSkinRef(idx int) *int16 {
 }
 
 func (md *MdlData) GetNumSeq() int32 {
-	return md.Hdr.NumSeq;
+	return md.Hdr.NumSeq
+}
+
+func (md *MdlData) GetNumBoneControllers() int32 {
+	return md.Hdr.NumBoneControllers
 }
