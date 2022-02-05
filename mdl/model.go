@@ -4,12 +4,13 @@ import (
 	//"bytes"
 	//"encoding/binary"
 	//"fmt"
-	"github.com/go-gl/mathgl/mgl32"
+	//"github.com/go-gl/mathgl/mgl32"
 
 	//"github.com/takaya030/gomdl/studio"
 )
 
 // unpacked model
+/*
 type Model struct {
 	Name [64]byte
 
@@ -24,6 +25,7 @@ type Model struct {
 	NormInfos []byte
 	Norms     []mgl32.Vec3
 }
+*/
 
 /*
 func NewModel(buf []byte, model *studio.Model) *Model {

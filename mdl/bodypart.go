@@ -10,7 +10,7 @@ type BodyPart struct {
 
 	Base int32
 
-	Models []Model
+	//Models []Model
 }
 
 func NewBodyPart(buf []byte, sbp *studio.BodyPart) *BodyPart {
