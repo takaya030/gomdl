@@ -28,6 +28,15 @@ func NewMdlModel(mdd *MdlData) *MdlModel {
 	return mdm
 }
 
+func (mm *MdlModel) InitView() {
+	mm.SetSequence(0);
+	mm.SetController(0, 0.0)
+	mm.SetController(1, 0.0)
+	mm.SetController(2, 0.0)
+	mm.SetController(3, 0.0)
+	mm.SetMouth(0.0)
+}
+
 func (mm *MdlModel) GetSequence() int32 {
 	return mm.sequence
 }
