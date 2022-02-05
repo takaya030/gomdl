@@ -190,3 +190,20 @@ func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
 
 	return (float32)(setting) * (1.0 / 255.0) * (seq.BlendEnd[iblender] - seq.BlendStart[iblender]) + seq.BlendStart[iblender]
 }
+
+func (mm *MdlModel) AdvanceFrame(dt float32) {
+	var seq *studio.SeqDesc = mm.mdd.GetSeqDesc((int)(mm.sequence))
+
+	if dt > 0.1 {
+		dt = 0.1
+	}
+
+	mm.frame += dt * seq.Fps
+
+	if seq.NumFrames <= 1 {
+		mm.frame = 0
+	} else {
+		// wrap
+		mm.frame -= math32.Floor(mm.frame / (float32)(seq.NumFrames - 1)) * (float32)(seq.NumFrames - 1)
+	}
+}
