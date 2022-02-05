@@ -29,10 +29,10 @@ func (mm *MdlModel) GetSequence() int32 {
 }
 
 func (mm *MdlModel) SetSequence(iseq int32) int32 {
-	if iseq >= mm.mdd.NumSeq() {
+	if iseq >= mm.mdd.GetNumSeq() {
 		iseq = 0
 	} else if iseq < 0 {
-		iseq = mm.mdd.NumSeq() - 1
+		iseq = mm.mdd.GetNumSeq() - 1
 	}
 
 	mm.sequence = iseq
