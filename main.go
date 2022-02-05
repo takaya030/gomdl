@@ -24,8 +24,14 @@ func main() {
 	*/
 
 	// read mdldata
-	md := mdl.NewMdlData(buf)
-	fmt.Printf("%# v\n", pretty.Formatter(*md))
+	mdd := mdl.NewMdlData(buf)
+	mdm := mdl.NewMdlModel(mdd)
+	mdm.InitView()
+	mdm.SetBlending(0, 0.0)
+	mdm.SetBlending(1, 0.0)
+	mdm.AdvanceFrame(0.01)
+	fmt.Printf("%# v\n", pretty.Formatter(mdd.GetSeqDesc(0)))
+	fmt.Printf("%# v\n", pretty.Formatter(*mdm))
 
 	// read seqdescs
 	/*
