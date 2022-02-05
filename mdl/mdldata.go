@@ -118,3 +118,7 @@ func (md *MdlData) GetSkinRef(idx int) *int16 {
 
 	return psr
 }
+
+func (md *MdlData) NumSeq() int32 {
+	return md.Hdr.NumSeq;
+}
