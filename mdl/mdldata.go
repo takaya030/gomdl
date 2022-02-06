@@ -126,3 +126,7 @@ func (md *MdlData) GetNumSeq() int32 {
 func (md *MdlData) GetNumBoneControllers() int32 {
 	return md.Hdr.NumBoneControllers
 }
+
+func (md *MdlData) GetNumBodyParts() int32 {
+	return md.Hdr.NumBodyParts
+}
