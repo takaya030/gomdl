@@ -24,6 +24,7 @@ type MdlModel struct {
 
 	// internal data
 	pmodel		*studio.Model
+	adj			studio.Vec4
 }
 
 func NewMdlModel(mdd *MdlData) *MdlModel {
@@ -233,4 +234,41 @@ func (mm *MdlModel) SetupModel(bodypart int32) {
 	var index int32 = (mm.bodynum / pbp.Base) % pbp.NumModels
 
 	mm.pmodel = pbp.GetModel(mm.mdd.BaseBuf, (int)(index))
+}
+
+func (mm *MdlModel) CalcBoneAdj() {
+	var value float32 = 0.0
+
+	for j := 0; j < (int)(mm.mdd.GetNumBoneControllers()); j++ {
+		tmpbc := mm.mdd.GetBoneController(j)
+		i := (int)(tmpbc.Index)
+		if i <= 3 {
+			if (tmpbc.Type & studio.STUDIO_RLOOP) != 0 {
+				value = (float32)(mm.controller[i]) * (360.0 / 256.0) + tmpbc.Start
+			} else {
+				value = (float32)(mm.controller[i]) / 255.0
+				if value < 0 {
+					value = 0
+				}
+				if value > 1.0 {
+					value = 1.0
+				}
+				value = (1.0 - value) * tmpbc.Start + value * tmpbc.End
+			}
+
+		} else {
+			value = (float32)(mm.mouth) / 64.0
+			if value > 1.0 {
+				value = 1.0
+			}
+			value = (1.0 - value) * tmpbc.Start + value * tmpbc.End
+		}
+
+		switch tmpbc.Type & studio.STUDIO_TYPES {
+		case studio.STUDIO_XR, studio.STUDIO_YR, studio.STUDIO_ZR:
+			mm.adj[j] = value * (math32.Pi / 180.0)
+		case studio.STUDIO_X, studio.STUDIO_Y, studio.STUDIO_Z:
+			mm.adj[j] = value
+		}
+	}
 }
