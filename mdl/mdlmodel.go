@@ -14,11 +14,16 @@ import (
 type MdlModel struct {
 	mdd	*MdlData
 
+	// entity settings
 	sequence	int32		// sequence index
 	frame 		float32		// frame
 	controller	[4]uint8	// bone controllers
 	mouth		uint8		// mouth position
 	blending	[2]uint8	// animation blending
+	bodynum		int32		// bodypart selection
+
+	// internal data
+	pmodel		*studio.Model
 }
 
 func NewMdlModel(mdd *MdlData) *MdlModel {
@@ -35,6 +40,7 @@ func (mm *MdlModel) InitView() {
 	mm.SetController(2, 0.0)
 	mm.SetController(3, 0.0)
 	mm.SetMouth(0.0)
+	mm.bodynum = 0
 }
 
 func (mm *MdlModel) GetSequence() int32 {
@@ -215,4 +221,16 @@ func (mm *MdlModel) AdvanceFrame(dt float32) {
 		// wrap
 		mm.frame -= math32.Floor(mm.frame / (float32)(seq.NumFrames - 1)) * (float32)(seq.NumFrames - 1)
 	}
+}
+
+func (mm *MdlModel) SetupModel(bodypart int32) {
+	if bodypart >= mm.mdd.GetNumBodyParts() {
+		bodypart = 0
+	}
+
+	pbp := mm.mdd.GetBodyPart((int)(bodypart))
+
+	var index int32 = (mm.bodynum / pbp.Base) % pbp.NumModels
+
+	mm.pmodel = pbp.GetModel(mm.mdd.BaseBuf, (int)(index))
 }
