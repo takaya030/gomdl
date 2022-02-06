@@ -45,6 +45,7 @@ const (
 
 type Vec3 [3]float32
 type Vec4 [4]float32
+type Mat34	[3][4]float32
 
 type Bone struct {
 	Name           [32]byte   // bone name for symbolic links
