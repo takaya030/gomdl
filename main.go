@@ -7,7 +7,7 @@ import (
 	//"unsafe"
 
 	"github.com/takaya030/gomdl/mdl"
-	//"github.com/takaya030/gomdl/studio"
+	"github.com/takaya030/gomdl/studio"
 )
 
 func main() {
@@ -30,8 +30,14 @@ func main() {
 	mdm.SetBlending(0, 0.0)
 	mdm.SetBlending(1, 0.0)
 	mdm.AdvanceFrame(0.01)
-	fmt.Printf("%# v\n", pretty.Formatter(mdd.GetSeqDesc(0)))
+	mdm.SetupModel(0)
+	//fmt.Printf("%# v\n", pretty.Formatter(mdd.GetSeqDesc(0)))
 	fmt.Printf("%# v\n", pretty.Formatter(*mdm))
+
+	ang := studio.Vec3{ 0.5, 0.5, 0.5 }
+	var qt studio.Vec4
+	studio.AngleQuaternion(&ang, &qt)
+	fmt.Printf("%# v\n", pretty.Formatter(qt))
 
 	// read seqdescs
 	/*
