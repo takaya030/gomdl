@@ -35,6 +35,13 @@ func (in1 *Vec3) VectorTransform(in2 *Mat34, out *Vec3) {
 	out[2] = in1.DotProductV4(in2[2]) + in2[2][3]
 }
 
+// rotate by the inverse of the matrix
+func (in1 *Vec3) VectorIRotate(in2 *Mat34, out *Vec3) {
+	out[0] = in1[0]*in2[0][0] + in1[1]*in2[1][0] + in1[2]*in2[2][0]
+	out[1] = in1[0]*in2[0][1] + in1[1]*in2[1][1] + in1[2]*in2[2][1]
+	out[2] = in1[0]*in2[0][2] + in1[1]*in2[1][2] + in1[2]*in2[2][2]
+}
+
 func (in1 *Mat34) ConcatTransforms( in2 *Mat34, out *Mat34 ) {
 	out[0][0] = in1[0][0] * in2[0][0] + in1[0][1] * in2[1][0] +
 				in1[0][2] * in2[2][0]
