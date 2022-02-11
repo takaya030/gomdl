@@ -4,6 +4,20 @@ import (
 	"github.com/chewxy/math32"
 )
 
+func (qt *Vec4) QuaternionMatrix(mat *Mat34) {
+	mat[0][0] = 1.0 - 2.0 * qt[1] * qt[1] - 2.0 * qt[2] * qt[2]
+	mat[1][0] = 2.0 * qt[0] * qt[1] + 2.0 * qt[3] * qt[2]
+	mat[2][0] = 2.0 * qt[0] * qt[2] - 2.0 * qt[3] * qt[1]
+
+	mat[0][1] = 2.0 * qt[0] * qt[1] - 2.0 * qt[3] * qt[2]
+	mat[1][1] = 1.0 - 2.0 * qt[0] * qt[0] - 2.0 * qt[2] * qt[2]
+	mat[2][1] = 2.0 * qt[1] * qt[2] + 2.0 * qt[3] * qt[0]
+
+	mat[0][2] = 2.0 * qt[0] * qt[2] + 2.0 * qt[3] * qt[1]
+	mat[1][2] = 2.0 * qt[1] * qt[2] - 2.0 * qt[3] * qt[0]
+	mat[2][2] = 1.0 - 2.0 * qt[0] * qt[0] - 2.0 * qt[1] * qt[1]
+}
+
 func (p *Vec4) QuaternionSlerp(q Vec4, t float32, qt *Vec4) {
 
 	// decide if one of the quaternions is backwards
