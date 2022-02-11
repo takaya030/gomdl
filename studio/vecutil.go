@@ -4,18 +4,35 @@ import (
 	"github.com/chewxy/math32"
 )
 
+func (v *Vec3) VectorLength() float32 {
+	return math32.Sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2])
+}
+
+func (v *Vec3) VectorNormalize() float32 {
+	length := v.VectorLength()
+
+	if length > 0.0 {
+		ilength := 1/length
+		v[0] *= ilength
+		v[1] *= ilength
+		v[2] *= ilength
+	}
+
+	return length
+}
+
 func (v1 *Vec3) DotProduct(v2 *Vec3) float32 {
-	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]
 }
 
 func (v1 *Vec3) DotProductV4(v2 [4]float32) float32 {
-	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]
 }
 
 func (in1 *Vec3) VectorTransform(in2 *Mat34, out *Vec3) {
-	out[0] = in1.DotProductV4(in2[0]) + in2[0][3];
-	out[1] = in1.DotProductV4(in2[1]) + in2[1][3];
-	out[2] = in1.DotProductV4(in2[2]) + in2[2][3];
+	out[0] = in1.DotProductV4(in2[0]) + in2[0][3]
+	out[1] = in1.DotProductV4(in2[1]) + in2[1][3]
+	out[2] = in1.DotProductV4(in2[2]) + in2[2][3]
 }
 
 func (in1 *Mat34) ConcatTransforms( in2 *Mat34, out *Mat34 ) {
