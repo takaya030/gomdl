@@ -36,7 +36,7 @@ func main() {
 
 	ang := studio.Vec3{ 0.5, 0.5, 0.5 }
 	var qt studio.Vec4
-	studio.AngleQuaternion(&ang, &qt)
+	ang.AngleQuaternion(&qt)
 	fmt.Printf("%# v\n", pretty.Formatter(qt))
 
 	// read seqdescs

@@ -4,7 +4,7 @@ import (
 	"github.com/chewxy/math32"
 )
 
-func AngleQuaternion(angles *Vec3, qt *Vec4) {
+func (angles *Vec3) AngleQuaternion(qt *Vec4) {
 
 	var ang float32
 	var sr, sp, sy, cr, cp, cy float32
