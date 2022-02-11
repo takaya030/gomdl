@@ -34,10 +34,15 @@ func main() {
 	//fmt.Printf("%# v\n", pretty.Formatter(mdd.GetSeqDesc(0)))
 	fmt.Printf("%# v\n", pretty.Formatter(*mdm))
 
-	ang := studio.Vec3{ 0.5, 0.5, 0.5 }
-	var qt studio.Vec4
-	ang.AngleQuaternion(&qt)
-	fmt.Printf("%# v\n", pretty.Formatter(qt))
+	ang1 := studio.Vec3{ 0.0, 0.0, 0.0 }
+	ang2 := studio.Vec3{ 0.5, 0.5, 0.5 }
+	var qt1,qt2,qt3 studio.Vec4
+	ang1.AngleQuaternion(&qt1)
+	ang2.AngleQuaternion(&qt2)
+	qt1.QuaternionSlerp(qt2, 0.1, &qt3)
+	fmt.Printf("%# v\n", pretty.Formatter(qt1))
+	fmt.Printf("%# v\n", pretty.Formatter(qt2))
+	fmt.Printf("%# v\n", pretty.Formatter(qt3))
 
 	// read seqdescs
 	/*
