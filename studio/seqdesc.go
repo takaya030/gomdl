@@ -93,32 +93,3 @@ func (anm *Anim) GetAnimValue2(idx int) *AnimValue2 {
 
 	return panv
 }
-
-/*
-func NewSeqDescs(buf []byte, num int) []SeqDesc {
-	s := make([]SeqDesc, num)
-	r := bytes.NewReader(buf)
-
-	// read seqdescs
-	if err := binary.Read(r, binary.LittleEndian, s); err != nil {
-		fmt.Print(err)
-		return []SeqDesc{}
-	}
-
-	return s
-}
-
-func (seq *SeqDesc) GetEventsBuf(buf []byte) []byte {
-	s := int(seq.EventIndex)
-	e := s + int(unsafe.Sizeof(Event{}))*int(seq.NumEvents)
-
-	return buf[s:e]
-}
-
-func (seq *SeqDesc) GetAnimBuf(buf []byte, numbones int) []byte {
-	s := int(seq.AnimIndex)
-	e := s + int(unsafe.Sizeof(Anim{}))*int(seq.NumBlends)*numbones
-
-	return buf[s:e]
-}
-*/
