@@ -14,6 +14,18 @@ const (
 	MAXSTUDIOBONES	= 128		// total bones actually used
 )
 
+// global variables
+
+// for lighting
+var	g_lightvec		studio.Vec3
+var	g_lightcolor	studio.Vec3
+var g_blightvec		[MAXSTUDIOBONES]studio.Vec3
+var	g_ambientlight	float32		// ambient world light
+var	g_shadelight	float32		// direct world light
+
+var	g_bonetransform		[MAXSTUDIOBONES]studio.Mat34	// bone transformation matrix
+
+
 // calc utility
 type MdlModel struct {
 	mdd	*MdlData
@@ -29,15 +41,6 @@ type MdlModel struct {
 	// internal data
 	pmodel		*studio.Model
 	adj			studio.Vec4
-
-	// for test
-	g_lightvec		studio.Vec3
-	g_lightcolor	studio.Vec3
-	g_blightvec		[MAXSTUDIOBONES]studio.Vec3
-	g_ambientlight	float32		// ambient world light
-	g_shadelight	float32		// direct world light
-
-	g_bonetransform		[MAXSTUDIOBONES]studio.Mat34	// bone transformation matrix
 }
 
 func NewMdlModel(mdd *MdlData) *MdlModel {
@@ -238,15 +241,15 @@ func (mm *MdlModel) AdvanceFrame(dt float32) {
 }
 
 func (mm *MdlModel) SetupLighting() {
-	mm.g_ambientlight = 32.0
-	mm.g_shadelight = 192.0
+	g_ambientlight = 32.0
+	g_shadelight = 192.0
 
-	mm.g_lightvec = studio.Vec3{ 0, 0, -1.0 }
+	g_lightvec = studio.Vec3{ 0, 0, -1.0 }
 
-	mm.g_lightcolor = studio.Vec3{ 1.0, 1.0, 1.0 }
+	g_lightcolor = studio.Vec3{ 1.0, 1.0, 1.0 }
 
 	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
-		mm.g_lightvec.VectorIRotate( &(mm.g_bonetransform[i]), &(mm.g_blightvec[i]) )
+		g_lightvec.VectorIRotate( &(g_bonetransform[i]), &(g_blightvec[i]) )
 	}
 
 }
