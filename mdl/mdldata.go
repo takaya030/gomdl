@@ -130,3 +130,7 @@ func (md *MdlData) GetNumBoneControllers() int32 {
 func (md *MdlData) GetNumBodyParts() int32 {
 	return md.Hdr.NumBodyParts
 }
+
+func (md *MdlData) GetNumBones() int32 {
+	return md.Hdr.NumBones
+}
