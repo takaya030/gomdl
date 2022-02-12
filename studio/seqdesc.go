@@ -99,3 +99,9 @@ func (anv *AnimValue) GetAddedPointer(idx int) *AnimValue {
 
 	return panv
 }
+
+func (anv *AnimValue) GetAnimValue2Pointer() *AnimValue2 {
+	panv := (*AnimValue2)(unsafe.Pointer(anv))
+
+	return panv
+}
