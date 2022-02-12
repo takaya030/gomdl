@@ -66,6 +66,16 @@ type Anim struct {
 	Offset [6]uint16
 }
 
+// animation frames
+type AnimValue struct {
+	Valid byte
+	Total byte
+}
+
+type AnimValue2 struct {
+	Value int16
+}
+
 func (sd *SeqDesc) GetAnim(basebuf *byte, idx int) *Anim {
 	pan := (*Anim)(unsafe.Add(unsafe.Pointer(basebuf), (int)(sd.AnimIndex) + (int)(unsafe.Sizeof(Anim{})) * idx))
 

@@ -98,13 +98,3 @@ type SeqGroup struct {
 	Unused1 int32    // was "cache"  - index pointer
 	Unused2 int32    // was "data" -  hack for group 0
 }
-
-// animation frames
-type AnimValue struct {
-	Valid byte
-	Total byte
-}
-
-type AnimValue2 struct {
-	Value int16
-}
