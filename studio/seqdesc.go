@@ -82,6 +82,18 @@ func (sd *SeqDesc) GetAnim(basebuf *byte, idx int) *Anim {
 	return pan
 }
 
+func (anm *Anim) GetAnimValue(idx int) *AnimValue {
+	panv := (*AnimValue)(unsafe.Add(unsafe.Pointer(anm), (int)(anm.Offset[idx])))
+
+	return panv
+}
+
+func (anm *Anim) GetAnimValue2(idx int) *AnimValue2 {
+	panv := (*AnimValue2)(unsafe.Add(unsafe.Pointer(anm), (int)(anm.Offset[idx])))
+
+	return panv
+}
+
 /*
 func NewSeqDescs(buf []byte, num int) []SeqDesc {
 	s := make([]SeqDesc, num)
