@@ -366,3 +366,48 @@ func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone,
 		angle1.AngleQuaternion(q)
 	}
 }
+
+func (mm *MdlModel) CalcBonePosition(frame int, s float32, pbone *studio.Bone, panim *studio.Anim, pos *studio.Vec3) {
+
+	for j := 0; j < 3; j++ {
+		pos[j] = pbone.Value[j]; // default;
+		if panim.Offset[j] != 0 {
+			var panimvalue *studio.AnimValue
+			var panimvalue2 *studio.AnimValue2
+			var panimvalue2_2 *studio.AnimValue2
+
+			panimvalue = panim.GetAnimValue(j)
+			k := frame;
+			// find span of values that includes the frame we want
+			for (int)(panimvalue.Total) <= k {
+				k -= (int)(panimvalue.Total)
+				panimvalue = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 1)
+			}
+			// if we're inside the span
+			if (int)(panimvalue.Valid) > k {
+				// and there's more data in the span
+				if (int)(panimvalue.Valid) > k + 1 {
+					panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
+					panimvalue2_2 = panimvalue.GetAddedPointer(k+2).GetAnimValue2Pointer()
+					pos[j] += ((float32)(panimvalue2.Value) * (1.0 - s) + s * (float32)(panimvalue2_2.Value)) * pbone.Scale[j]
+				} else {
+					panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
+					pos[j] += (float32)(panimvalue2.Value) * pbone.Scale[j]
+				}
+			} else {
+				// are we at the end of the repeating values section and there's another section with data?
+				if (int)(panimvalue.Total) <= k + 1 {
+					panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)).GetAnimValue2Pointer()
+					panimvalue2_2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)+2).GetAnimValue2Pointer()
+					pos[j] += ((float32)(panimvalue2.Value) * (1.0 - s) + s * (float32)(panimvalue2_2.Value)) * pbone.Scale[j]
+				} else {
+					panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)).GetAnimValue2Pointer()
+					pos[j] += (float32)(panimvalue2.Value) * pbone.Scale[j]
+				}
+			}
+		}
+		if (int)(pbone.BoneController[j]) != -1 {
+			pos[j] += mm.adj[(int)(pbone.BoneController[j])]
+		}
+	}
+}
