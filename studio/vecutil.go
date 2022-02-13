@@ -21,6 +21,13 @@ func (v *Vec3) VectorNormalize() float32 {
 	return length
 }
 
+func (v1 *Vec3) VectorCompare(v2 *Vec3) bool {
+	if v1[0] != v2[0] || v1[1] != v2[1] || v1[2] != v2[2] {
+		return false
+	}
+	return true
+}
+
 func (v1 *Vec3) DotProduct(v2 *Vec3) float32 {
 	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]
 }
