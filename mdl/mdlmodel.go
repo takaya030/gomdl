@@ -51,7 +51,7 @@ func NewMdlModel(mdd *MdlData) *MdlModel {
 }
 
 func (mm *MdlModel) InitView() {
-	mm.SetSequence(0);
+	mm.SetSequence(0)
 	mm.SetController(0, 0.0)
 	mm.SetController(1, 0.0)
 	mm.SetController(2, 0.0)
@@ -300,5 +300,69 @@ func (mm *MdlModel) CalcBoneAdj() {
 		case studio.STUDIO_X, studio.STUDIO_Y, studio.STUDIO_Z:
 			mm.adj[j] = value
 		}
+	}
+}
+
+func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone, panim *studio.Anim, q *studio.Vec4) {
+	var angle1, angle2 studio.Vec3
+
+	for j := 0; j < 3; j++ {
+
+		if panim.Offset[j+3] == 0 {
+			angle1[j] = pbone.Value[j+3]		// default
+			angle2[j] = pbone.Value[j+3]		// default
+		} else {
+			var panimvalue *studio.AnimValue
+			var panimvalue2 *studio.AnimValue2
+
+			panimvalue = panim.GetAnimValue(j + 3)
+			k := frame
+			for (int)(panimvalue.Total) <= k {
+				k -= (int)(panimvalue.Total)
+				panimvalue = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 1)
+			}
+			// Bah, missing blend!
+			if (int)(panimvalue.Valid) > k {
+				panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
+				angle1[j] = (float32)(panimvalue2.Value)
+
+				if (int)(panimvalue.Valid) > k + 1 {
+					panimvalue2 = panimvalue.GetAddedPointer(k+2).GetAnimValue2Pointer()
+					angle2[j] = (float32)(panimvalue2.Value)
+				} else {
+					if (int)(panimvalue.Total) > k + 1 {
+						angle2[j] = angle1[j]
+					} else {
+						panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 2).GetAnimValue2Pointer()
+						angle2[j] = (float32)(panimvalue2.Value)
+					}
+				}
+			} else {
+				panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)).GetAnimValue2Pointer()
+				angle1[j] = (float32)(panimvalue2.Value)
+				if (int)(panimvalue.Total) > k + 1 {
+					angle2[j] = angle1[j]
+				} else {
+					panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 2).GetAnimValue2Pointer()
+					angle2[j] = (float32)(panimvalue2.Value)
+				}
+			}
+			angle1[j] = pbone.Value[j+3] + angle1[j] * pbone.Scale[j+3]
+			angle2[j] = pbone.Value[j+3] + angle2[j] * pbone.Scale[j+3]
+		}
+
+		if (int)(pbone.BoneController[j+3]) != -1 {
+			angle1[j] += mm.adj[(int)(pbone.BoneController[j+3])]
+			angle2[j] += mm.adj[(int)(pbone.BoneController[j+3])]
+		}
+	}
+
+	var	q1, q2 studio.Vec4
+	if angle1.VectorCompare(&angle2) == false {
+		angle1.AngleQuaternion(&q1)
+		angle2.AngleQuaternion(&q2)
+		q1.QuaternionSlerp(q2, s, q)
+	} else {
+		angle1.AngleQuaternion(q)
 	}
 }
