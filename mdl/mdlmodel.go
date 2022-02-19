@@ -412,7 +412,7 @@ func (mm *MdlModel) CalcBonePosition(frame int, s float32, pbone *studio.Bone, p
 	}
 }
 
-func (mm *MdlModel) CalcRotations ( pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUDIOBONES]studio.Vec4, pseqdesc *studio.SeqDesc, panim *studio.Anim, f float32) {
+func (mm *MdlModel) CalcRotations (pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUDIOBONES]studio.Vec4, pseqdesc *studio.SeqDesc, panim *studio.Anim, f float32) {
 
 	var frame int = (int)(f)
 	var s float32 = f - (float32)(frame)
@@ -422,18 +422,38 @@ func (mm *MdlModel) CalcRotations ( pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTU
 
 	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
 		pbone := mm.mdd.GetBone(i)
-		mm.CalcBoneQuaternion( frame, s, pbone, panim, &q[i] );
-		mm.CalcBonePosition( frame, s, pbone, panim, &pos[i] );
+		mm.CalcBoneQuaternion( frame, s, pbone, panim, &q[i] )
+		mm.CalcBonePosition( frame, s, pbone, panim, &pos[i] )
 		panim = panim.GetNextAnim(1)
 	}
 
 	if (pseqdesc.MotionType & studio.STUDIO_X) != 0 {
-		pos[(int)(pseqdesc.MotionBone)][0] = 0.0;
+		pos[(int)(pseqdesc.MotionBone)][0] = 0.0
 	}
 	if (pseqdesc.MotionType & studio.STUDIO_Y) != 0 {
-		pos[(int)(pseqdesc.MotionBone)][1] = 0.0;
+		pos[(int)(pseqdesc.MotionBone)][1] = 0.0
 	}
 	if (pseqdesc.MotionType & studio.STUDIO_Z) != 0 {
-		pos[(int)(pseqdesc.MotionBone)][2] = 0.0;
+		pos[(int)(pseqdesc.MotionBone)][2] = 0.0
+	}
+}
+
+func (mm *MdlModel) SlerpBones(q1 *[MAXSTUDIOBONES]studio.Vec4, pos1 *[MAXSTUDIOBONES]studio.Vec3, q2 *[MAXSTUDIOBONES]studio.Vec4, pos2 *[MAXSTUDIOBONES]studio.Vec3, s float32) {
+
+	if s < 0 {
+		s = 0
+	} else if s > 1.0 {
+		s = 1.0
+	}
+
+	var s1 float32 = 1.0 - s
+	var q3 studio.Vec4
+
+	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
+		q1[i].QuaternionSlerp( q2[i], s, &q3 )
+		q1[i] = q3
+		pos1[i][0] = pos1[i][0] * s1 + pos2[i][0] * s
+		pos1[i][1] = pos1[i][1] * s1 + pos2[i][1] * s
+		pos1[i][2] = pos1[i][2] * s1 + pos2[i][2] * s
 	}
 }
