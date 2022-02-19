@@ -25,6 +25,17 @@ var	g_shadelight	float32		// direct world light
 
 var	g_bonetransform		[MAXSTUDIOBONES]studio.Mat34	// bone transformation matrix
 
+// for setup bones
+var w_pos			[MAXSTUDIOBONES]studio.Vec3
+var w_bonematrix	studio.Mat34
+var w_q				[MAXSTUDIOBONES]studio.Vec4
+
+var w_pos2			[MAXSTUDIOBONES]studio.Vec3
+var w_q2			[MAXSTUDIOBONES]studio.Vec4
+var w_pos3			[MAXSTUDIOBONES]studio.Vec3
+var w_q3			[MAXSTUDIOBONES]studio.Vec4
+var w_pos4			[MAXSTUDIOBONES]studio.Vec3
+var w_q4			[MAXSTUDIOBONES]studio.Vec4
 
 // calc utility
 type MdlModel struct {
@@ -455,5 +466,56 @@ func (mm *MdlModel) SlerpBones(q1 *[MAXSTUDIOBONES]studio.Vec4, pos1 *[MAXSTUDIO
 		pos1[i][0] = pos1[i][0] * s1 + pos2[i][0] * s
 		pos1[i][1] = pos1[i][1] * s1 + pos2[i][1] * s
 		pos1[i][2] = pos1[i][2] * s1 + pos2[i][2] * s
+	}
+}
+
+func (mm *MdlModel) SetUpBones() {
+
+	if mm.sequence >=  mm.mdd.GetNumSeq() {
+		mm.sequence = 0
+	}
+
+	var pseqdesc *studio.SeqDesc = mm.mdd.GetSeqDesc((int)(mm.sequence))
+	var panim *studio.Anim = pseqdesc.GetAnim(mm.mdd.BaseBuf, 0)
+	mm.CalcRotations(&w_pos, &w_q, pseqdesc, panim, mm.frame)
+
+	if pseqdesc.NumBlends > 1 {
+		var s float32
+
+		panim = panim.GetNextAnim((int)(mm.mdd.GetNumBones()))
+		mm.CalcRotations(&w_pos2, &w_q2, pseqdesc, panim, mm.frame)
+		s = (float32)(mm.blending[0]) / 255.0
+
+		mm.SlerpBones(&w_q, &w_pos, &w_q2, &w_pos2, s)
+
+		if pseqdesc.NumBlends == 4 {
+			panim = panim.GetNextAnim((int)(mm.mdd.GetNumBones()))
+			mm.CalcRotations(&w_pos3, &w_q3, pseqdesc, panim, mm.frame)
+
+			panim = panim.GetNextAnim((int)(mm.mdd.GetNumBones()))
+			mm.CalcRotations(&w_pos4, &w_q4, pseqdesc, panim, mm.frame)
+
+			s = (float32)(mm.blending[0]) / 255.0
+			mm.SlerpBones(&w_q3, &w_pos3, &w_q4, &w_pos4, s)
+
+			s = (float32)(mm.blending[1]) / 255.0
+			mm.SlerpBones(&w_q, &w_pos, &w_q3, &w_pos3, s)
+		}
+	}
+
+	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
+		pbone := mm.mdd.GetBone(i)
+
+		w_q[i].QuaternionMatrix(&w_bonematrix)
+
+		w_bonematrix[0][3] = w_pos[i][0];
+		w_bonematrix[1][3] = w_pos[i][1];
+		w_bonematrix[2][3] = w_pos[i][2];
+
+		if pbone.Parent == -1 {
+			g_bonetransform[i] = w_bonematrix
+		} else {
+			g_bonetransform[(int)(pbone.Parent)].ConcatTransforms (&w_bonematrix, &g_bonetransform[i])
+		}
 	}
 }
