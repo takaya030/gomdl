@@ -411,3 +411,29 @@ func (mm *MdlModel) CalcBonePosition(frame int, s float32, pbone *studio.Bone, p
 		}
 	}
 }
+
+func (mm *MdlModel) CalcRotations ( pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUDIOBONES]studio.Vec4, pseqdesc *studio.SeqDesc, panim *studio.Anim, f float32) {
+
+	var frame int = (int)(f)
+	var s float32 = f - (float32)(frame)
+
+	// add in programatic controllers
+	mm.CalcBoneAdj()
+
+	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
+		pbone := mm.mdd.GetBone(i)
+		mm.CalcBoneQuaternion( frame, s, pbone, panim, &q[i] );
+		mm.CalcBonePosition( frame, s, pbone, panim, &pos[i] );
+		panim = panim.GetNextAnim(1)
+	}
+
+	if (pseqdesc.MotionType & studio.STUDIO_X) != 0 {
+		pos[(int)(pseqdesc.MotionBone)][0] = 0.0;
+	}
+	if (pseqdesc.MotionType & studio.STUDIO_Y) != 0 {
+		pos[(int)(pseqdesc.MotionBone)][1] = 0.0;
+	}
+	if (pseqdesc.MotionType & studio.STUDIO_Z) != 0 {
+		pos[(int)(pseqdesc.MotionBone)][2] = 0.0;
+	}
+}
