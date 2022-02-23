@@ -12,6 +12,7 @@ import (
 // unpacked mdl data
 type MdlData struct {
 	BaseBuf         *byte
+	BaseBufSl		[]byte
 	Hdr             *studio.Hdr
 	Bones           *byte
 	BoneControllers *byte
@@ -29,6 +30,7 @@ func NewMdlData(buf []byte) *MdlData {
 
 	// base buffer
 	md.BaseBuf = (*byte)(unsafe.Pointer(&buf[0]))
+	md.BaseBufSl = buf
 
 	// read hdr
 	h := studio.NewHdr(buf)
