@@ -12,3 +12,10 @@ type Texture struct {
 	Height int32
 	Index  int32
 }
+
+func (tx *Texture) GetPixelBuf(basebuf []byte) []byte {
+	st := (int)(tx.Index)
+	ed := (int)(tx.Index) + (int)(tx.Width * tx.Height) - 1
+
+	return basebuf[st:ed]
+}
