@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/kr/pretty"
 	"io/ioutil"
-	//"unsafe"
 
 	"github.com/takaya030/gomdl/mdl"
 	"github.com/takaya030/gomdl/studio"
@@ -17,12 +16,6 @@ func main() {
 		return
 	}
 
-	// cast hdr
-	/*
-	p_Hdr := (*studio.Hdr)(unsafe.Pointer(&buf[0]))
-	fmt.Printf("%# v\n", pretty.Formatter(*p_Hdr))
-	*/
-
 	// read mdldata
 	mdd := mdl.NewMdlData(buf)
 	mdm := mdl.NewMdlModel(mdd)
@@ -31,7 +24,6 @@ func main() {
 	mdm.SetBlending(1, 0.0)
 	mdm.AdvanceFrame(0.01)
 	mdm.SetupModel(0)
-	//fmt.Printf("%# v\n", pretty.Formatter(mdd.GetSeqDesc(0)))
 	fmt.Printf("%# v\n", pretty.Formatter(*(mdd.Hdr)))
 
 	var tex [3]*studio.Texture
@@ -48,10 +40,4 @@ func main() {
 
 	fmt.Printf("%# v\n", pretty.Formatter(vec1))
 	fmt.Printf("%# v\n", pretty.Formatter(vec2))
-
-	// read seqdescs
-	/*
-		seq := studio.NewSeqDescs(h.GetSeqsBuf(buf), int(h.NumSeq))
-		fmt.Printf("%# v\n", pretty.Formatter(seq))
-	*/
 }
