@@ -82,15 +82,6 @@ type Attachment struct {
 	Vectors [3]Vec3
 }
 
-// skin info
-type Texture struct {
-	Name   [64]byte
-	Flags  int32
-	Width  int32
-	Height int32
-	Index  int32
-}
-
 // demand loaded sequence groups
 type SeqGroup struct {
 	Label   [32]byte // textual name
