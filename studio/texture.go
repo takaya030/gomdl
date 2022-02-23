@@ -19,3 +19,10 @@ func (tx *Texture) GetPixelBuf(basebuf []byte) []byte {
 
 	return basebuf[st:ed]
 }
+
+func (tx *Texture) GetPalBuf(basebuf []byte) []byte {
+	st := (int)(tx.Index) + (int)(tx.Width * tx.Height)
+	ed := (int)(tx.Index) + (int)(tx.Width * tx.Height) + (256 * 3)
+
+	return basebuf[st:ed]
+}
