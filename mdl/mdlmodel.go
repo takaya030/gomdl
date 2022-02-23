@@ -92,7 +92,7 @@ func (mm *MdlModel) SetController(icntl int32, flval float32) float32 {
 	var bc *studio.BoneController = nil
 
 	// find first controller that matches the index
-	for i := 0; i < (int)(mm.mdd.GetNumBoneControllers()); i++ {
+	for i := 0; i < int(mm.mdd.GetNumBoneControllers()); i++ {
 		tmpbc := mm.mdd.GetBoneController(i)
 		if tmpbc.Index == icntl {
 			bc = tmpbc
@@ -129,7 +129,7 @@ func (mm *MdlModel) SetController(icntl int32, flval float32) float32 {
 		}
 	}
 
-	var setting int = (int)(math32.Floor(255 * (flval - bc.Start) / (bc.End - bc.Start)))
+	var setting int = int(math32.Floor(255 * (flval - bc.Start) / (bc.End - bc.Start)))
 
 	if setting < 0 {
 		setting = 0
@@ -139,14 +139,14 @@ func (mm *MdlModel) SetController(icntl int32, flval float32) float32 {
 	}
 	mm.controller[icntl] = (uint8)(setting)
 
-	return (float32)(setting) * (1.0 / 255.0) * (bc.End - bc.Start) + bc.Start
+	return float32(setting) * (1.0 / 255.0) * (bc.End - bc.Start) + bc.Start
 }
 
 func (mm *MdlModel) SetMouth(flval float32) float32 {
 	var bc *studio.BoneController = nil
 
 	// find first controller that matches the index
-	for i := 0; i < (int)(mm.mdd.GetNumBoneControllers()); i++ {
+	for i := 0; i < int(mm.mdd.GetNumBoneControllers()); i++ {
 		tmpbc := mm.mdd.GetBoneController(i)
 		if tmpbc.Index == 4 {
 			bc = tmpbc
@@ -183,7 +183,7 @@ func (mm *MdlModel) SetMouth(flval float32) float32 {
 		}
 	}
 
-	var setting int = (int)(math32.Floor(64 * (flval - bc.Start) / (bc.End - bc.Start)))
+	var setting int = int(math32.Floor(64 * (flval - bc.Start) / (bc.End - bc.Start)))
 
 	if setting < 0 {
 		setting = 0
@@ -193,11 +193,11 @@ func (mm *MdlModel) SetMouth(flval float32) float32 {
 	}
 	mm.mouth = (uint8)(setting)
 
-	return (float32)(setting) * (1.0 / 64.0) * (bc.End - bc.Start) + bc.Start
+	return float32(setting) * (1.0 / 64.0) * (bc.End - bc.Start) + bc.Start
 }
 
 func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
-	var seq *studio.SeqDesc = mm.mdd.GetSeqDesc((int)(mm.sequence))
+	var seq *studio.SeqDesc = mm.mdd.GetSeqDesc(int(mm.sequence))
 
 	if seq.BlendType[iblender] == 0 {
 		return flval
@@ -221,7 +221,7 @@ func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
 		}
 	}
 
-	var setting int = (int)(math32.Floor(255 * (flval - seq.BlendStart[iblender]) / (seq.BlendEnd[iblender] - seq.BlendStart[iblender])))
+	var setting int = int(math32.Floor(255 * (flval - seq.BlendStart[iblender]) / (seq.BlendEnd[iblender] - seq.BlendStart[iblender])))
 
 	if setting < 0 {
 		setting = 0
@@ -231,11 +231,11 @@ func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
 	}
 	mm.blending[iblender] = (uint8)(setting)
 
-	return (float32)(setting) * (1.0 / 255.0) * (seq.BlendEnd[iblender] - seq.BlendStart[iblender]) + seq.BlendStart[iblender]
+	return float32(setting) * (1.0 / 255.0) * (seq.BlendEnd[iblender] - seq.BlendStart[iblender]) + seq.BlendStart[iblender]
 }
 
 func (mm *MdlModel) AdvanceFrame(dt float32) {
-	var seq *studio.SeqDesc = mm.mdd.GetSeqDesc((int)(mm.sequence))
+	var seq *studio.SeqDesc = mm.mdd.GetSeqDesc(int(mm.sequence))
 
 	if dt > 0.1 {
 		dt = 0.1
@@ -247,7 +247,7 @@ func (mm *MdlModel) AdvanceFrame(dt float32) {
 		mm.frame = 0
 	} else {
 		// wrap
-		mm.frame -= math32.Floor(mm.frame / (float32)(seq.NumFrames - 1)) * (float32)(seq.NumFrames - 1)
+		mm.frame -= math32.Floor(mm.frame / float32(seq.NumFrames - 1)) * float32(seq.NumFrames - 1)
 	}
 }
 
@@ -259,7 +259,7 @@ func (mm *MdlModel) SetupLighting() {
 
 	g_lightcolor = studio.Vec3{ 1.0, 1.0, 1.0 }
 
-	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
+	for i := 0; i < int(mm.mdd.GetNumBones()); i++ {
 		g_lightvec.VectorIRotate( &(g_bonetransform[i]), &(g_blightvec[i]) )
 	}
 
@@ -270,24 +270,24 @@ func (mm *MdlModel) SetupModel(bodypart int32) {
 		bodypart = 0
 	}
 
-	pbp := mm.mdd.GetBodyPart((int)(bodypart))
+	pbp := mm.mdd.GetBodyPart(int(bodypart))
 
 	var index int32 = (mm.bodynum / pbp.Base) % pbp.NumModels
 
-	mm.pmodel = pbp.GetModel(mm.mdd.BaseBuf, (int)(index))
+	mm.pmodel = pbp.GetModel(mm.mdd.BaseBuf, int(index))
 }
 
 func (mm *MdlModel) CalcBoneAdj() {
 	var value float32 = 0.0
 
-	for j := 0; j < (int)(mm.mdd.GetNumBoneControllers()); j++ {
+	for j := 0; j < int(mm.mdd.GetNumBoneControllers()); j++ {
 		tmpbc := mm.mdd.GetBoneController(j)
-		i := (int)(tmpbc.Index)
+		i := int(tmpbc.Index)
 		if i <= 3 {
 			if (tmpbc.Type & studio.STUDIO_RLOOP) != 0 {
-				value = (float32)(mm.controller[i]) * (360.0 / 256.0) + tmpbc.Start
+				value = float32(mm.controller[i]) * (360.0 / 256.0) + tmpbc.Start
 			} else {
-				value = (float32)(mm.controller[i]) / 255.0
+				value = float32(mm.controller[i]) / 255.0
 				if value < 0 {
 					value = 0
 				}
@@ -298,7 +298,7 @@ func (mm *MdlModel) CalcBoneAdj() {
 			}
 
 		} else {
-			value = (float32)(mm.mouth) / 64.0
+			value = float32(mm.mouth) / 64.0
 			if value > 1.0 {
 				value = 1.0
 			}
@@ -328,43 +328,43 @@ func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone,
 
 			panimvalue = panim.GetAnimValue(j + 3)
 			k := frame
-			for (int)(panimvalue.Total) <= k {
-				k -= (int)(panimvalue.Total)
-				panimvalue = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 1)
+			for int(panimvalue.Total) <= k {
+				k -= int(panimvalue.Total)
+				panimvalue = panimvalue.GetAddedPointer(int(panimvalue.Valid) + 1)
 			}
 			// Bah, missing blend!
-			if (int)(panimvalue.Valid) > k {
+			if int(panimvalue.Valid) > k {
 				panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
-				angle1[j] = (float32)(panimvalue2.Value)
+				angle1[j] = float32(panimvalue2.Value)
 
-				if (int)(panimvalue.Valid) > k + 1 {
+				if int(panimvalue.Valid) > k + 1 {
 					panimvalue2 = panimvalue.GetAddedPointer(k+2).GetAnimValue2Pointer()
-					angle2[j] = (float32)(panimvalue2.Value)
+					angle2[j] = float32(panimvalue2.Value)
 				} else {
-					if (int)(panimvalue.Total) > k + 1 {
+					if int(panimvalue.Total) > k + 1 {
 						angle2[j] = angle1[j]
 					} else {
-						panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 2).GetAnimValue2Pointer()
-						angle2[j] = (float32)(panimvalue2.Value)
+						panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid) + 2).GetAnimValue2Pointer()
+						angle2[j] = float32(panimvalue2.Value)
 					}
 				}
 			} else {
-				panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)).GetAnimValue2Pointer()
-				angle1[j] = (float32)(panimvalue2.Value)
-				if (int)(panimvalue.Total) > k + 1 {
+				panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)).GetAnimValue2Pointer()
+				angle1[j] = float32(panimvalue2.Value)
+				if int(panimvalue.Total) > k + 1 {
 					angle2[j] = angle1[j]
 				} else {
-					panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 2).GetAnimValue2Pointer()
-					angle2[j] = (float32)(panimvalue2.Value)
+					panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid) + 2).GetAnimValue2Pointer()
+					angle2[j] = float32(panimvalue2.Value)
 				}
 			}
 			angle1[j] = pbone.Value[j+3] + angle1[j] * pbone.Scale[j+3]
 			angle2[j] = pbone.Value[j+3] + angle2[j] * pbone.Scale[j+3]
 		}
 
-		if (int)(pbone.BoneController[j+3]) != -1 {
-			angle1[j] += mm.adj[(int)(pbone.BoneController[j+3])]
-			angle2[j] += mm.adj[(int)(pbone.BoneController[j+3])]
+		if int(pbone.BoneController[j+3]) != -1 {
+			angle1[j] += mm.adj[int(pbone.BoneController[j+3])]
+			angle2[j] += mm.adj[int(pbone.BoneController[j+3])]
 		}
 	}
 
@@ -390,48 +390,48 @@ func (mm *MdlModel) CalcBonePosition(frame int, s float32, pbone *studio.Bone, p
 			panimvalue = panim.GetAnimValue(j)
 			k := frame;
 			// find span of values that includes the frame we want
-			for (int)(panimvalue.Total) <= k {
-				k -= (int)(panimvalue.Total)
-				panimvalue = panimvalue.GetAddedPointer((int)(panimvalue.Valid) + 1)
+			for int(panimvalue.Total) <= k {
+				k -= int(panimvalue.Total)
+				panimvalue = panimvalue.GetAddedPointer(int(panimvalue.Valid) + 1)
 			}
 			// if we're inside the span
-			if (int)(panimvalue.Valid) > k {
+			if int(panimvalue.Valid) > k {
 				// and there's more data in the span
-				if (int)(panimvalue.Valid) > k + 1 {
+				if int(panimvalue.Valid) > k + 1 {
 					panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
 					panimvalue2_2 = panimvalue.GetAddedPointer(k+2).GetAnimValue2Pointer()
-					pos[j] += ((float32)(panimvalue2.Value) * (1.0 - s) + s * (float32)(panimvalue2_2.Value)) * pbone.Scale[j]
+					pos[j] += (float32(panimvalue2.Value) * (1.0 - s) + s * float32(panimvalue2_2.Value)) * pbone.Scale[j]
 				} else {
 					panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
-					pos[j] += (float32)(panimvalue2.Value) * pbone.Scale[j]
+					pos[j] += float32(panimvalue2.Value) * pbone.Scale[j]
 				}
 			} else {
 				// are we at the end of the repeating values section and there's another section with data?
-				if (int)(panimvalue.Total) <= k + 1 {
-					panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)).GetAnimValue2Pointer()
-					panimvalue2_2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)+2).GetAnimValue2Pointer()
-					pos[j] += ((float32)(panimvalue2.Value) * (1.0 - s) + s * (float32)(panimvalue2_2.Value)) * pbone.Scale[j]
+				if int(panimvalue.Total) <= k + 1 {
+					panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)).GetAnimValue2Pointer()
+					panimvalue2_2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)+2).GetAnimValue2Pointer()
+					pos[j] += (float32(panimvalue2.Value) * (1.0 - s) + s * float32(panimvalue2_2.Value)) * pbone.Scale[j]
 				} else {
-					panimvalue2 = panimvalue.GetAddedPointer((int)(panimvalue.Valid)).GetAnimValue2Pointer()
-					pos[j] += (float32)(panimvalue2.Value) * pbone.Scale[j]
+					panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)).GetAnimValue2Pointer()
+					pos[j] += float32(panimvalue2.Value) * pbone.Scale[j]
 				}
 			}
 		}
-		if (int)(pbone.BoneController[j]) != -1 {
-			pos[j] += mm.adj[(int)(pbone.BoneController[j])]
+		if int(pbone.BoneController[j]) != -1 {
+			pos[j] += mm.adj[int(pbone.BoneController[j])]
 		}
 	}
 }
 
 func (mm *MdlModel) CalcRotations (pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUDIOBONES]studio.Vec4, pseqdesc *studio.SeqDesc, panim *studio.Anim, f float32) {
 
-	var frame int = (int)(f)
-	var s float32 = f - (float32)(frame)
+	var frame int = int(f)
+	var s float32 = f - float32(frame)
 
 	// add in programatic controllers
 	mm.CalcBoneAdj()
 
-	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
+	for i := 0; i < int(mm.mdd.GetNumBones()); i++ {
 		pbone := mm.mdd.GetBone(i)
 		mm.CalcBoneQuaternion( frame, s, pbone, panim, &q[i] )
 		mm.CalcBonePosition( frame, s, pbone, panim, &pos[i] )
@@ -439,13 +439,13 @@ func (mm *MdlModel) CalcRotations (pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUD
 	}
 
 	if (pseqdesc.MotionType & studio.STUDIO_X) != 0 {
-		pos[(int)(pseqdesc.MotionBone)][0] = 0.0
+		pos[int(pseqdesc.MotionBone)][0] = 0.0
 	}
 	if (pseqdesc.MotionType & studio.STUDIO_Y) != 0 {
-		pos[(int)(pseqdesc.MotionBone)][1] = 0.0
+		pos[int(pseqdesc.MotionBone)][1] = 0.0
 	}
 	if (pseqdesc.MotionType & studio.STUDIO_Z) != 0 {
-		pos[(int)(pseqdesc.MotionBone)][2] = 0.0
+		pos[int(pseqdesc.MotionBone)][2] = 0.0
 	}
 }
 
@@ -460,7 +460,7 @@ func (mm *MdlModel) SlerpBones(q1 *[MAXSTUDIOBONES]studio.Vec4, pos1 *[MAXSTUDIO
 	var s1 float32 = 1.0 - s
 	var q3 studio.Vec4
 
-	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
+	for i := 0; i < int(mm.mdd.GetNumBones()); i++ {
 		q1[i].QuaternionSlerp( q2[i], s, &q3 )
 		q1[i] = q3
 		pos1[i][0] = pos1[i][0] * s1 + pos2[i][0] * s
@@ -475,35 +475,35 @@ func (mm *MdlModel) SetUpBones() {
 		mm.sequence = 0
 	}
 
-	var pseqdesc *studio.SeqDesc = mm.mdd.GetSeqDesc((int)(mm.sequence))
+	var pseqdesc *studio.SeqDesc = mm.mdd.GetSeqDesc(int(mm.sequence))
 	var panim *studio.Anim = pseqdesc.GetAnim(mm.mdd.BaseBuf, 0)
 	mm.CalcRotations(&w_pos, &w_q, pseqdesc, panim, mm.frame)
 
 	if pseqdesc.NumBlends > 1 {
 		var s float32
 
-		panim = panim.GetNextAnim((int)(mm.mdd.GetNumBones()))
+		panim = panim.GetNextAnim(int(mm.mdd.GetNumBones()))
 		mm.CalcRotations(&w_pos2, &w_q2, pseqdesc, panim, mm.frame)
-		s = (float32)(mm.blending[0]) / 255.0
+		s = float32(mm.blending[0]) / 255.0
 
 		mm.SlerpBones(&w_q, &w_pos, &w_q2, &w_pos2, s)
 
 		if pseqdesc.NumBlends == 4 {
-			panim = panim.GetNextAnim((int)(mm.mdd.GetNumBones()))
+			panim = panim.GetNextAnim(int(mm.mdd.GetNumBones()))
 			mm.CalcRotations(&w_pos3, &w_q3, pseqdesc, panim, mm.frame)
 
-			panim = panim.GetNextAnim((int)(mm.mdd.GetNumBones()))
+			panim = panim.GetNextAnim(int(mm.mdd.GetNumBones()))
 			mm.CalcRotations(&w_pos4, &w_q4, pseqdesc, panim, mm.frame)
 
-			s = (float32)(mm.blending[0]) / 255.0
+			s = float32(mm.blending[0]) / 255.0
 			mm.SlerpBones(&w_q3, &w_pos3, &w_q4, &w_pos4, s)
 
-			s = (float32)(mm.blending[1]) / 255.0
+			s = float32(mm.blending[1]) / 255.0
 			mm.SlerpBones(&w_q, &w_pos, &w_q3, &w_pos3, s)
 		}
 	}
 
-	for i := 0; i < (int)(mm.mdd.GetNumBones()); i++ {
+	for i := 0; i < int(mm.mdd.GetNumBones()); i++ {
 		pbone := mm.mdd.GetBone(i)
 
 		w_q[i].QuaternionMatrix(&w_bonematrix)
@@ -515,7 +515,7 @@ func (mm *MdlModel) SetUpBones() {
 		if pbone.Parent == -1 {
 			g_bonetransform[i] = w_bonematrix
 		} else {
-			g_bonetransform[(int)(pbone.Parent)].ConcatTransforms (&w_bonematrix, &g_bonetransform[i])
+			g_bonetransform[int(pbone.Parent)].ConcatTransforms (&w_bonematrix, &g_bonetransform[i])
 		}
 	}
 }

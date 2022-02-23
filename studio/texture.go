@@ -21,15 +21,15 @@ type Rgb struct {
 }
 
 func (tx *Texture) GetPixelBuf(basebuf []byte) []byte {
-	st := (int)(tx.Index)
-	ed := (int)(tx.Index) + (int)(tx.Width * tx.Height) - 1
+	st := int(tx.Index)
+	ed := int(tx.Index) + int(tx.Width * tx.Height) - 1
 
 	return basebuf[st:ed]
 }
 
 func (tx *Texture) GetPalBuf(basebuf []byte) []byte {
-	st := (int)(tx.Index) + (int)(tx.Width * tx.Height)
-	ed := (int)(tx.Index) + (int)(tx.Width * tx.Height) + (256 * 3)
+	st := int(tx.Index) + int(tx.Width * tx.Height)
+	ed := int(tx.Index) + int(tx.Width * tx.Height) + (256 * 3)
 
 	return basebuf[st:ed]
 }
@@ -68,8 +68,8 @@ func (tx *Texture) UploadTexture(basebuf []byte) {
 	}
 
 	for i := 0; i < outheight; i++ {
-		row1[i] = (int)((float32(i) + 0.25) * (float32(tx.Height) / float32(outheight))) * int(tx.Width)
-		row2[i] = (int)((float32(i) + 0.75) * (float32(tx.Height) / float32(outheight))) * int(tx.Width)
+		row1[i] = int((float32(i) + 0.25) * (float32(tx.Height) / float32(outheight))) * int(tx.Width)
+		row2[i] = int((float32(i) + 0.75) * (float32(tx.Height) / float32(outheight))) * int(tx.Width)
 	}
 
 	pixels := tx.GetPixelBuf(basebuf)

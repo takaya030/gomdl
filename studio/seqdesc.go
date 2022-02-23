@@ -77,31 +77,31 @@ type AnimValue2 struct {
 }
 
 func (sd *SeqDesc) GetAnim(basebuf *byte, idx int) *Anim {
-	pan := (*Anim)(unsafe.Add(unsafe.Pointer(basebuf), (int)(sd.AnimIndex) + (int)(unsafe.Sizeof(Anim{})) * idx))
+	pan := (*Anim)(unsafe.Add(unsafe.Pointer(basebuf), int(sd.AnimIndex) + int(unsafe.Sizeof(Anim{})) * idx))
 
 	return pan
 }
 
 func (anm *Anim) GetNextAnim(idx int) *Anim {
-	pan := (*Anim)(unsafe.Add(unsafe.Pointer(anm), (int)(unsafe.Sizeof(Anim{})) * idx))
+	pan := (*Anim)(unsafe.Add(unsafe.Pointer(anm), int(unsafe.Sizeof(Anim{})) * idx))
 
 	return pan
 }
 
 func (anm *Anim) GetAnimValue(idx int) *AnimValue {
-	panv := (*AnimValue)(unsafe.Add(unsafe.Pointer(anm), (int)(anm.Offset[idx])))
+	panv := (*AnimValue)(unsafe.Add(unsafe.Pointer(anm), int(anm.Offset[idx])))
 
 	return panv
 }
 
 func (anm *Anim) GetAnimValue2(idx int) *AnimValue2 {
-	panv := (*AnimValue2)(unsafe.Add(unsafe.Pointer(anm), (int)(anm.Offset[idx])))
+	panv := (*AnimValue2)(unsafe.Add(unsafe.Pointer(anm), int(anm.Offset[idx])))
 
 	return panv
 }
 
 func (anv *AnimValue) GetAddedPointer(idx int) *AnimValue {
-	panv := (*AnimValue)(unsafe.Add(unsafe.Pointer(anv), (int)(unsafe.Sizeof(AnimValue{})) * idx))
+	panv := (*AnimValue)(unsafe.Add(unsafe.Pointer(anv), int(unsafe.Sizeof(AnimValue{})) * idx))
 
 	return panv
 }
