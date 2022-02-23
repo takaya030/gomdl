@@ -8,6 +8,7 @@ require (
 )
 
 require (
+	github.com/go-gl/gl v0.0.0-20211210172815-726fda9656d6 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/rogpeppe/go-internal v1.6.1 // indirect
 )
