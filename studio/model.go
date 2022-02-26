@@ -55,6 +55,12 @@ func (md *Model) GetStudioVert(basebuf *byte, idx int) *Vec3 {
 	return psv
 }
 
+func (md *Model) GetStudioNorm(basebuf *byte, idx int) *Vec3 {
+	psn := (*Vec3)(unsafe.Add(unsafe.Pointer(basebuf), (int)(md.NormIndex) + (int)(unsafe.Sizeof(Vec3{})) * idx))
+
+	return psn
+}
+
 /*
 func NewModels(buf []byte, num int) []Model {
 	m := make([]Model, num)
