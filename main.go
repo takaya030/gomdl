@@ -36,10 +36,7 @@ func main() {
 		panic(err)
 	}
 
-	gl.Enable(gl.DEPTH_TEST)
-	gl.ClearColor(0.2, 0.2, 0.3, 1.0)
-	gl.ClearDepth(1)
-	gl.DepthFunc(gl.LEQUAL)
+	initGL()
 	gl.Viewport(0, 0, int32(winWidth), int32(winHeight))
 
 	running = true
@@ -55,6 +52,27 @@ func main() {
 		drawgl()
 		window.GLSwap()
 	}
+}
+
+func initGL() {
+
+	// Enable smooth shading
+	gl.ShadeModel( gl.SMOOTH )
+
+	// Set the background black
+	gl.ClearColor( 0.2, 0.2, 0.2, 0.0 )
+
+	// Depth buffer setup
+	gl.ClearDepth( 1.0 )
+
+	// Enables Depth Testing
+	gl.Enable( gl.DEPTH_TEST )
+
+	// The Type Of Depth Test To Do
+	gl.DepthFunc( gl.LEQUAL )
+
+	// Really Nice Perspective Calculations
+	gl.Hint( gl.PERSPECTIVE_CORRECTION_HINT, gl.NICEST )
 }
 
 func drawgl() {
