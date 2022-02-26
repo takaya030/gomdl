@@ -49,6 +49,12 @@ func (md *Model) GetNormBone(basebuf *byte, idx int) byte {
 	return *pnb
 }
 
+func (md *Model) GetStudioVert(basebuf *byte, idx int) *Vec3 {
+	psv := (*Vec3)(unsafe.Add(unsafe.Pointer(basebuf), (int)(md.VertIndex) + (int)(unsafe.Sizeof(Vec3{})) * idx))
+
+	return psv
+}
+
 /*
 func NewModels(buf []byte, num int) []Model {
 	m := make([]Model, num)
