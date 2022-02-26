@@ -137,7 +137,7 @@ func (mm *MdlModel) SetController(icntl int32, flval float32) float32 {
 	if setting > 255 {
 		setting = 255
 	}
-	mm.controller[icntl] = (uint8)(setting)
+	mm.controller[icntl] = uint8(setting)
 
 	return float32(setting) * (1.0 / 255.0) * (bc.End - bc.Start) + bc.Start
 }
@@ -191,7 +191,7 @@ func (mm *MdlModel) SetMouth(flval float32) float32 {
 	if setting > 64 {
 		setting = 64
 	}
-	mm.mouth = (uint8)(setting)
+	mm.mouth = uint8(setting)
 
 	return float32(setting) * (1.0 / 64.0) * (bc.End - bc.Start) + bc.Start
 }
@@ -229,7 +229,7 @@ func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
 	if setting > 255 {
 		setting = 255
 	}
-	mm.blending[iblender] = (uint8)(setting)
+	mm.blending[iblender] = uint8(setting)
 
 	return float32(setting) * (1.0 / 255.0) * (seq.BlendEnd[iblender] - seq.BlendStart[iblender]) + seq.BlendStart[iblender]
 }
