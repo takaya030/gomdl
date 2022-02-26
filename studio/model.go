@@ -37,6 +37,12 @@ func (md *Model) GetMesh(basebuf *byte, idx int) *Mesh {
 	return pmh
 }
 
+func (md *Model) GetVertBone(basebuf *byte, idx int) byte {
+	pvb := (*byte)(unsafe.Add(unsafe.Pointer(basebuf), (int)(md.VertInfoIndex) + idx))
+
+	return *pvb
+}
+
 /*
 func NewModels(buf []byte, num int) []Model {
 	m := make([]Model, num)
