@@ -107,14 +107,31 @@ func resizeWindow(width int32, height int32) {
 func drawgl() {
 	gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
-	gl.Begin(gl.TRIANGLES)
-	gl.Color3f(1.0, 0.0, 0.0)
-	gl.Vertex2f(0.5, 0.0)
-	gl.Color3f(0.0, 1.0, 0.0)
-	gl.Vertex2f(-0.5, -0.5)
-	gl.Color3f(0.0, 0.0, 1.0)
-	gl.Vertex2f(-0.5, 0.5)
-	gl.End()
+	/* Move Left 1.5 Units And Into The Screen 6.0 */
+    gl.LoadIdentity()
+    gl.Translatef( -1.5, 0.0, -6.0 )
+
+    gl.Begin( gl.TRIANGLES )          /* Drawing Using Triangles       */
+      gl.Color3f(   1.0,  0.0,  0.0 ) /* Red                           */
+      gl.Vertex3f(  0.0,  1.0,  0.0 ) /* Top Of Triangle               */
+      gl.Color3f(   0.0,  1.0,  0.0 ) /* Green                         */
+      gl.Vertex3f( -1.0, -1.0,  0.0 ) /* Left Of Triangle              */
+      gl.Color3f(   0.0,  0.0,  1.0 ) /* Blue                          */
+      gl.Vertex3f(  1.0, -1.0,  0.0 ) /* Right Of Triangle             */
+    gl.End()                          /* Finished Drawing The Triangle */
+
+    /* Move Right 3 Units */
+    gl.Translatef( 3.0, 0.0, 0.0 )
+
+    /* Set The Color To Blue One Time Only */
+    gl.Color3f( 0.5, 0.5, 1.0)
+
+    gl.Begin( gl.QUADS );             /* Draw A Quad              */
+      gl.Vertex3f(  1.0,  1.0,  0.0 ) /* Top Right Of The Quad    */
+      gl.Vertex3f( -1.0,  1.0,  0.0 ) /* Top Left Of The Quad     */
+      gl.Vertex3f( -1.0, -1.0,  0.0 ) /* Bottom Left Of The Quad  */
+      gl.Vertex3f(  1.0, -1.0,  0.0 ) /* Bottom Right Of The Quad */
+    gl.End()                          /* Done Drawing The Quad    */
 }
 
 /*
