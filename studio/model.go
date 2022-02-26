@@ -43,6 +43,12 @@ func (md *Model) GetVertBone(basebuf *byte, idx int) byte {
 	return *pvb
 }
 
+func (md *Model) GetNormBone(basebuf *byte, idx int) byte {
+	pnb := (*byte)(unsafe.Add(unsafe.Pointer(basebuf), (int)(md.NormInfoIndex) + idx))
+
+	return *pnb
+}
+
 /*
 func NewModels(buf []byte, num int) []Model {
 	m := make([]Model, num)
