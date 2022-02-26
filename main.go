@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-gl/gl/v2.1/gl"
+	"github.com/go-gl/mathgl/mgl32"
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -37,7 +38,7 @@ func main() {
 	}
 
 	initGL()
-	gl.Viewport(0, 0, int32(winWidth), int32(winHeight))
+	resizeWindow(winWidth, winHeight)
 
 	running = true
 	for running {
@@ -73,6 +74,34 @@ func initGL() {
 
 	// Really Nice Perspective Calculations
 	gl.Hint( gl.PERSPECTIVE_CORRECTION_HINT, gl.NICEST )
+}
+
+func resizeWindow(width int32, height int32) {
+
+    /* Protect against a divide by zero */
+    if  height == 0 {
+		height = 1
+	}
+
+    /* Height / width ration */
+    ratio := float32(width) / float32(height)
+
+    /* Setup our viewport. */
+    gl.Viewport( 0, 0, int32(width), int32(height) )
+
+    /* change to the projection matrix and set our viewing volume. */
+    gl.MatrixMode( gl.PROJECTION )
+    gl.LoadIdentity()
+
+    /* Set our perspective */
+    projection := mgl32.Perspective( 45.0, ratio, 0.1, 100.0 )
+	gl.LoadMatrixf(&projection[0])
+
+    /* Make sure we're chaning the model view and not the projection */
+    gl.MatrixMode( gl.MODELVIEW )
+
+    /* Reset The View */
+    gl.LoadIdentity()
 }
 
 func drawgl() {
