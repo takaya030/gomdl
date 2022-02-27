@@ -519,3 +519,41 @@ func (mm *MdlModel) SetUpBones() {
 		}
 	}
 }
+
+func (mm *MdlModel) Lighting(bone int, flags int32, normal *Vec3) float32 {
+	var illum float32
+	var lightcos float32
+
+	illum = g_ambientlight
+
+	if (flags & studio.STUDIO_NF_FLATSHADE) != 0 {
+		illum += g_shadelight * 0.8
+	} else {
+		lightcos = normal.DotProduct(&g_blightvec[bone])	// -1 colinear, 1 opposite
+
+		if lightcos > 1.0 {
+			lightcos = 1.0
+		}
+
+		illum += g_shadelight
+
+		var r float32 = g_lambert
+		if r <= 1.0 {
+			r = 1.0
+		}
+
+		lightcos = (lightcos + (r - 1.0)) / r 		// do modified hemispherical lighting
+		if lightcos > 0.0 {
+			illum -= g_shadelight * lightcos
+		}
+		if (illum <= 0) {
+			illum = 0
+		}
+	}
+
+	if illum > 255.0 {
+		illum = 255.0
+	}
+
+	return illum / 255.0	// Light from 0 to 1.0
+}
