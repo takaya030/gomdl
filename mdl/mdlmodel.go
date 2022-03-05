@@ -12,9 +12,14 @@ import (
 
 const (
 	MAXSTUDIOBONES	= 128		// total bones actually used
+	MAXSTUDIOVERTS	= 2048
 )
 
 // global variables
+
+var g_vright		studio.Vec3		// needs to be set to viewer's right in order for chrome to work
+
+var g_lightvalues	[MAXSTUDIOVERTS]studio.Vec3		// light surface normals
 
 // for lighting
 var	g_lightvec		studio.Vec3
@@ -23,7 +28,14 @@ var g_blightvec		[MAXSTUDIOBONES]studio.Vec3
 var	g_ambientlight	float32		// ambient world light
 var	g_shadelight	float32		// direct world light
 
+var g_smodels_total	int			// cookie
+
 var	g_bonetransform		[MAXSTUDIOBONES]studio.Mat34	// bone transformation matrix
+
+var g_chrome		[MAXSTUDIOVERTS][2]int		// texture coords for surface normals
+var g_chromeage		[MAXSTUDIOBONES]int			// last time chrome vectors were updated
+var g_chromeup		[MAXSTUDIOBONES]studio.Vec3	// chrome vector "up" in bone reference frames
+var g_chromeright	[MAXSTUDIOBONES]studio.Vec3	// chrome vector "right" in bone reference frames
 
 // for setup bones
 var w_pos			[MAXSTUDIOBONES]studio.Vec3
@@ -42,6 +54,7 @@ type MdlModel struct {
 	mdd	*MdlData
 
 	// entity settings
+	origin		studio.Vec3
 	sequence	int32		// sequence index
 	frame 		float32		// frame
 	controller	[4]uint8	// bone controllers
@@ -556,4 +569,39 @@ func (mm *MdlModel) Lighting(bone int, flags int32, normal *Vec3) float32 {
 	}
 
 	return illum / 255.0	// Light from 0 to 1.0
+}
+
+func (mm *MdlModel) Chrome(pchrome *[2]int, bone int, normal *studio.Vec3) {
+
+	if g_chromeage[bone] != g_smodels_total {
+		// calculate vectors from the viewer to the bone. This roughly adjusts for position
+		var chromeupvec		studio.Vec3	// g_chrome t vector in world reference frame
+		var chromerightvec	studio.Vec3	// g_chrome s vector in world reference frame
+		var tmp				studio.Vec3	// vector pointing at bone in world reference frame
+
+		mm.origin.VectorScale(-1.0, &tmp)
+		tmp[0] += g_bonetransform[bone][0][3]
+		tmp[1] += g_bonetransform[bone][1][3]
+		tmp[2] += g_bonetransform[bone][2][3]
+		tmp.VectorNormalize()
+		tmp.CrossProduct(&g_vright, &chromeupvec)
+		chromeupvec.VectorNormalize()
+		tmp.CrossProduct(&chromeupvec, &chromerightvec)
+		chromerightvec.VectorNormalize()
+
+		chromeupvec.VectorIRotate(&g_bonetransform[bone], &g_chromeup[bone])
+		chromerightvec.VectorIRotate(&g_bonetransform[bone], &g_chromeright[bone])
+
+		g_chromeage[bone] = g_smodels_total
+	}
+
+	var	n float32
+
+	// calc s coord
+	n = normal.DotProduct(&g_chromeright[bone])
+	pchrome[0] = (n + 1.0) * 32.0		// FIX: make this a float
+
+	// calc t coord
+	n = normal.DotProduct(&g_chromeup[bone])
+	pchrome[1] = (n + 1.0) * 32.0		// FIX: make this a float
 }
