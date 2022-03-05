@@ -36,6 +36,12 @@ func (v1 *Vec3) DotProductV4(v2 [4]float32) float32 {
 	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2]
 }
 
+func (v1 *Vec3) CrossProduct(v2 *Vec3, cross *Vec3) {
+	cross[0] = v1[1]*v2[2] - v1[2]*v2[1]
+	cross[1] = v1[2]*v2[0] - v1[0]*v2[2]
+	cross[2] = v1[0]*v2[1] - v1[1]*v2[0]
+}
+
 func (in1 *Vec3) VectorTransform(in2 *Mat34, out *Vec3) {
 	out[0] = in1.DotProductV4(in2[0]) + in2[0][3]
 	out[1] = in1.DotProductV4(in2[1]) + in2[1][3]
