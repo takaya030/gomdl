@@ -19,6 +19,7 @@ const (
 
 var g_vright		studio.Vec3		// needs to be set to viewer's right in order for chrome to work
 
+var g_xformverts	[MAXSTUDIOVERTS]studio.Vec3		// transformed vertices
 var g_lightvalues	[MAXSTUDIOVERTS]studio.Vec3		// light surface normals
 
 // for lighting
@@ -604,4 +605,40 @@ func (mm *MdlModel) Chrome(pchrome *[2]int, bone int, normal *studio.Vec3) {
 	// calc t coord
 	n = normal.DotProduct(&g_chromeup[bone])
 	pchrome[1] = (n + 1.0) * 32.0		// FIX: make this a float
+}
+
+func (mm *MdlModel) DrawPoints () {
+
+	for i := 0; i < int(mm.pmodel.NumVerts); i++ {
+		pstudiovert := mm.pmodel.GetStudioVert(mm.mdd.BaseBuf, i)
+		vertbone := int(mm.pmodel.GetVertBone(mm.mdd.BaseBuf, i))
+		pstudiovert.VectorTransform(&g_bonetransform[vertbone], &g_xformverts[i])
+	}
+
+	var lv_idx int = 0
+	var norm_idx int = 0
+	for j := 0; j < int(mm.pmodel.NumMesh); j++ {
+		pmesh := mm.pmodel.GetMesh(mm.mdd.BaseBuf, j)
+		pskinref := mm.mdd.GetSkinRef(int(pmesh.SkinRef))
+		ptexture := mm.mdd.GetTexture(int(*pskinref))
+		flags := ptexture.Flags
+
+		for i := 0; i < int(pmesh.NumNorms); i++ {
+			pstudionorm := mm.pmodel.GetStudioNorm(mm.mdd.BaseBuf, norm_idx)
+			normbone := int(mm.pmodel.GetNormBone(mm.mdd.BaseBuf, norm_idx))
+			lv_tmp := mm.Lighting(normbone, flags, pstudionorm)
+
+			if (flags & STUDIO_NF_CHROME) != 0 {
+				mm.Chrome( &g_chrome[lv_idx], normbone, pstudionorm )
+			}
+
+			g_lightvalues[lv_idx][0] = lv_tmp * g_lightcolor[0]
+			g_lightvalues[lv_idx][1] = lv_tmp * g_lightcolor[1]
+			g_lightvalues[lv_idx][2] = lv_tmp * g_lightcolor[2]
+
+			lv_idx++
+			norm_idx++
+		}
+
+	}
 }
