@@ -12,6 +12,8 @@ import (
 
 
 var mdlmodel *mdl.MdlModel
+var prev_tick float32
+var transx, transy, transz, rotx, roty float32 = 0.0, 0.0, -2.0, 235.0, -90.0
 
 func main() {
 	var winTitle string = "Go-SDL2 + Go-GL"
@@ -74,6 +76,17 @@ func mdlvwInit(mdl_file string) {
 	mdd := mdl.NewMdlData(buf)
 	mdlmodel = mdl.NewMdlModel(mdd)
 	mdlmodel.Init()
+}
+
+func mdlvwDisplay() {
+	mdlmodel.SetBlending(0, 0.0)
+	mdlmodel.SetBlending(1, 0.0)
+
+	curr_tick := float32(sdl.GetTicks()) / 1000.0
+	mdlmodel.AdvanceFrame(curr_tick - prev_tick)
+	prev_tick = curr_tick
+
+	mdlmodel.DrawModel()
 }
 
 func initGL() {
@@ -153,6 +166,22 @@ func drawgl() {
       gl.Vertex3f( -1.0, -1.0,  0.0 ) /* Bottom Left Of The Quad  */
       gl.Vertex3f(  1.0, -1.0,  0.0 ) /* Bottom Right Of The Quad */
     gl.End()                          /* Done Drawing The Quad    */
+
+	// draw StudioModel
+    gl.PushMatrix()
+	gl.LoadIdentity()
+    gl.Translatef(transx, transy, transz)
+	gl.Rotatef(rotx, 0.0, 1.0, 0.0)
+    gl.Rotatef(roty, 1.0, 0.0, 0.0)
+    gl.Scalef( 0.02, 0.02, 0.02 )
+	gl.CullFace( gl.FRONT )
+	//gl.Enable( gl.DEPTH_TEST )
+    gl.Enable(gl.TEXTURE_2D)
+
+	mdlvwDisplay()
+
+    gl.Disable(gl.TEXTURE_2D)
+    gl.PopMatrix()
 }
 
 /*
