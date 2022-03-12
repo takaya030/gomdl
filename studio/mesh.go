@@ -18,20 +18,20 @@ type Mesh struct {
 
 func (me *Mesh) GetTricmd(basebuf *byte, idx int) *int16 {
 	var a int16
-	ptc := (*byte)(unsafe.Add(unsafe.Pointer(basebuf), (int)(me.TriIndex) + int(unsafe.Sizeof(a)) * idx)
+	ptc := (*int16)(unsafe.Add(unsafe.Pointer(basebuf), (int)(me.TriIndex) + int(unsafe.Sizeof(a)) * idx))
 
 	return ptc
 }
 
-func (tc *int16) GetNextTricmd(idx int) *int16 {
+func (me *Mesh) GetNextTricmd(tc *int16, idx int) *int16 {
 	var a int16
 	p := (*int16)(unsafe.Add(unsafe.Pointer(tc), int(unsafe.Sizeof(a)) * idx))
 
 	return p
 }
 
-func (tc *int16) GetTricmdArray() *[4]int16 {
-	p := (*[4]int16)unsafe.Pointer(tc)
+func (me *Mesh) GetTricmdArray(tc *int16) *[4]int16 {
+	p := (*[4]int16)(unsafe.Pointer(tc))
 
 	return p
 }

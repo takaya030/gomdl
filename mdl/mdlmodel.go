@@ -19,6 +19,7 @@ const (
 // global variables
 
 var g_vright		studio.Vec3		// needs to be set to viewer's right in order for chrome to work
+var g_lambert float32 = 1.5
 
 var g_xformverts	[MAXSTUDIOVERTS]studio.Vec3		// transformed vertices
 var g_lightvalues	[MAXSTUDIOVERTS]studio.Vec3		// light surface normals
@@ -550,7 +551,7 @@ func (mm *MdlModel) SetUpBones() {
 	}
 }
 
-func (mm *MdlModel) Lighting(bone int, flags int32, normal *Vec3) float32 {
+func (mm *MdlModel) Lighting(bone int, flags int32, normal *studio.Vec3) float32 {
 	var illum float32
 	var lightcos float32
 
@@ -616,11 +617,11 @@ func (mm *MdlModel) Chrome(pchrome *[2]int, bone int, normal *studio.Vec3) {
 
 	// calc s coord
 	n = normal.DotProduct(&g_chromeright[bone])
-	pchrome[0] = (n + 1.0) * 32.0		// FIX: make this a float
+	pchrome[0] = int((n + 1.0) * 32.0)		// FIX: make this a float
 
 	// calc t coord
 	n = normal.DotProduct(&g_chromeup[bone])
-	pchrome[1] = (n + 1.0) * 32.0		// FIX: make this a float
+	pchrome[1] = int((n + 1.0) * 32.0)		// FIX: make this a float
 }
 
 func (mm *MdlModel) DrawModel () {
@@ -650,7 +651,7 @@ func (mm *MdlModel) DrawModel () {
 	mm.SetupLighting()
 
 	for i := 0; i < int(mm.mdd.GetNumBodyParts()); i++ {
-		mm.SetupModel(i)
+		mm.SetupModel(int32(i))
 		mm.DrawPoints()
 	}
 
@@ -711,8 +712,9 @@ func (mm *MdlModel) DrawPoints () {
 		gl.BindTexture(gl.TEXTURE_2D, uint32(ptexture.Index))
 
 		if (ptexture.Flags & studio.STUDIO_NF_CHROME) != 0 {
-			for i := int(*ptricmds); i != 0 {
-				ptricmds = ptricmds.GetNextTricmd(1)
+			i := int(*ptricmds)
+			for i != 0 {
+				ptricmds = pmesh.GetNextTricmd(ptricmds, 1)
 
 				if i < 0 {
 					gl.Begin(gl.TRIANGLE_FAN)
@@ -722,24 +724,26 @@ func (mm *MdlModel) DrawPoints () {
 				}
 
 				for i > 0 {
-					ptriarr := ptricmds.GetTricmdArray()
+					ptriarr := pmesh.GetTricmdArray(ptricmds)
 
 					gl.TexCoord2f(float32(g_chrome[ptriarr[1]][0])*s, float32(g_chrome[ptriarr[1]][1])*t)
 
 					lv := g_lightvalues[ptriarr[1]]
 					gl.Color4f( lv[0], lv[1], lv[2], 1.0 )
 
-					av = g_xformverts[ptriarr[0]]
+					av := g_xformverts[ptriarr[0]]
 					gl.Vertex3f(av[0], av[1], av[2])
 
 					i--
-					ptricdms = ptricdms.GetNextTricmd(4)
+					ptricmds = pmesh.GetNextTricmd(ptricmds, 4)
 				}
 				gl.End()
+				i = int(*ptricmds)
 			}
 		} else {
-			for i := int(*ptricmds); i != 0 {
-				ptricmds = ptricmds.GetNextTricmd(1)
+			i := int(*ptricmds)
+			for i != 0 {
+				ptricmds = pmesh.GetNextTricmd(ptricmds, 1)
 
 				if i < 0 {
 					gl.Begin(gl.TRIANGLE_FAN)
@@ -749,20 +753,21 @@ func (mm *MdlModel) DrawPoints () {
 				}
 
 				for i > 0 {
-					ptriarr := ptricmds.GetTricmdArray()
+					ptriarr := pmesh.GetTricmdArray(ptricmds)
 
-					gl.TexCoord2f(float32(ptriarr[2])*s, float32(ptriarr[3]])*t)
+					gl.TexCoord2f(float32(ptriarr[2])*s, float32(ptriarr[3])*t)
 
 					lv := g_lightvalues[ptriarr[1]]
 					gl.Color4f( lv[0], lv[1], lv[2], 1.0 )
 
-					av = g_xformverts[ptriarr[0]]
+					av := g_xformverts[ptriarr[0]]
 					gl.Vertex3f(av[0], av[1], av[2])
 
 					i--
-					ptricdms = ptricdms.GetNextTricmd(4)
+					ptricmds = pmesh.GetNextTricmd(ptricmds, 4)
 				}
 				gl.End()
+				i = int(*ptricmds)
 			}
 		}
 	}
