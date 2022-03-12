@@ -85,9 +85,13 @@ func (tx *Texture) UploadTexture(basebuf []byte) {
 			pix3 := tx.GetRgb(pixels, pals, row2[i] + col1[j])
 			pix4 := tx.GetRgb(pixels, pals, row2[i] + col2[j])
 
-			out[out_idx + 0] = (pix1.r + pix2.r + pix3.r + pix4.r) >> 2
-			out[out_idx + 1] = (pix1.g + pix2.g + pix3.g + pix4.g) >> 2
-			out[out_idx + 2] = (pix1.b + pix2.b + pix3.b + pix4.b) >> 2
+			col_r := (uint(pix1.r) + uint(pix2.r) + uint(pix3.r) + uint(pix4.r)) >> 2
+			col_g := (uint(pix1.g) + uint(pix2.g) + uint(pix3.g) + uint(pix4.g)) >> 2
+			col_b := (uint(pix1.b) + uint(pix2.b) + uint(pix3.b) + uint(pix4.b)) >> 2
+
+			out[out_idx + 0] = byte(col_r)
+			out[out_idx + 1] = byte(col_g)
+			out[out_idx + 2] = byte(col_b)
 			out[out_idx + 3] = 0xFF;
 			out_idx += 4
 		}
