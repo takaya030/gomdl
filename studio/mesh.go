@@ -23,7 +23,7 @@ func (me *Mesh) GetTricmd(basebuf *byte, idx int) *int16 {
 	return ptc
 }
 
-func (tc *int16) GetNextTrimcmd(idx int) *int16 {
+func (tc *int16) GetNextTricmd(idx int) *int16 {
 	var a int16
 	p := (*int16)(unsafe.Add(unsafe.Pointer(tc), int(unsafe.Sizeof(a)) * idx))
 
