@@ -57,6 +57,7 @@ type MdlModel struct {
 
 	// entity settings
 	origin		studio.Vec3
+	angles		studio.Vec3
 	sequence	int32		// sequence index
 	frame 		float32		// frame
 	controller	[4]uint8	// bone controllers
@@ -608,6 +609,46 @@ func (mm *MdlModel) Chrome(pchrome *[2]int, bone int, normal *studio.Vec3) {
 	pchrome[1] = (n + 1.0) * 32.0		// FIX: make this a float
 }
 
+func (mm *MdlModel) DrawModel () {
+
+	g_smodels_total++		// render data cache cookie
+
+	if mm.mdd.GetNumBodyParts() == 0 {
+		return
+	}
+
+	gl.PushMatrix()
+
+    gl.Translatef(mm.origin[0], mm.origin[1], mm.origin[2])
+
+    gl.Rotatef(mm.angles[1],  0, 0, 1)
+    gl.Rotatef(mm.angles[0],  0, 1, 0)
+    gl.Rotatef(mm.angles[2],  1, 0, 0)
+
+	// gl.ShadeModel(gl.SMOOTH)
+
+	gl.TexEnvf(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.MODULATE)
+
+	// gl.Hint (gl.PERSPECTIVE_CORRECTION_HINT, gl.FASTEST)
+
+	mm.SetUpBones()
+
+	mm.SetupLighting()
+
+	for i := 0; i < int(mm.mdd.GetNumBodyParts()); i++ {
+		mm.SetupModel(i)
+		mm.DrawPoints()
+	}
+
+	gl.TexEnvf(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.REPLACE)
+
+	// gl.ShadeModel(gl.FLAT)
+
+	// gl.Hint(gl.PERSPECTIVE_CORRECTION_HINT, gl.NICEST)
+
+	gl.PopMatrix()
+}
+
 func (mm *MdlModel) DrawPoints () {
 
 	for i := 0; i < int(mm.pmodel.NumVerts); i++ {
@@ -629,7 +670,7 @@ func (mm *MdlModel) DrawPoints () {
 			normbone := int(mm.pmodel.GetNormBone(mm.mdd.BaseBuf, norm_idx))
 			lv_tmp := mm.Lighting(normbone, flags, pstudionorm)
 
-			if (flags & STUDIO_NF_CHROME) != 0 {
+			if (flags & studio.STUDIO_NF_CHROME) != 0 {
 				mm.Chrome( &g_chrome[lv_idx], normbone, pstudionorm )
 			}
 
@@ -655,7 +696,7 @@ func (mm *MdlModel) DrawPoints () {
 
 		gl.BindTexture(gl.TEXTURE_2D, uint32(ptexture.Index))
 
-		if (ptexture.Flags & STUDIO_NF_CHROME) != 0 {
+		if (ptexture.Flags & studio.STUDIO_NF_CHROME) != 0 {
 			for i := int(*ptricmds); i != 0 {
 				ptricmds = ptricmds.GetNextTricmd(1)
 
