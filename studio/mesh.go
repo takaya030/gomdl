@@ -22,24 +22,3 @@ func (me *Mesh) GetTricmd(basebuf *byte, idx int) *int16 {
 
 	return ptc
 }
-
-/*
-func NewMeshes(buf []byte, num int) []Mesh {
-	m := make([]Mesh, num)
-	r := bytes.NewReader(buf)
-
-	// read meshes
-	if err := binary.Read(r, binary.LittleEndian, m); err != nil {
-		fmt.Print(err)
-		return []Mesh{}
-	}
-
-	return m
-}
-
-func (m *Mesh) GetTrisBuf(buf []byte) []byte {
-	s := int(m.TriIndex)
-
-	return buf[s:]
-}
-*/
