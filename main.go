@@ -2,10 +2,16 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/mathgl/mgl32"
 	"github.com/veandco/go-sdl2/sdl"
+
+	"github.com/takaya030/gomdl/mdl"
 )
+
+
+var mdlmodel *mdl.MdlModel
 
 func main() {
 	var winTitle string = "Go-SDL2 + Go-GL"
@@ -37,6 +43,7 @@ func main() {
 		panic(err)
 	}
 
+	mdlvwInit(`./asset/gsg9.mdl`)
 	initGL()
 	resizeWindow(winWidth, winHeight)
 
@@ -53,6 +60,20 @@ func main() {
 		drawgl()
 		window.GLSwap()
 	}
+}
+
+func mdlvwInit(mdl_file string) {
+
+	buf, rferr := ioutil.ReadFile(mdl_file)
+	if rferr != nil {
+		fmt.Print(rferr)
+		return
+	}
+
+	// read mdldata
+	mdd := mdl.NewMdlData(buf)
+	mdlmodel = mdl.NewMdlModel(mdd)
+	mdlmodel.Init()
 }
 
 func initGL() {
