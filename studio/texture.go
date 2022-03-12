@@ -22,7 +22,7 @@ type Rgb struct {
 
 func (tx *Texture) GetPixelBuf(basebuf []byte) []byte {
 	st := int(tx.Index)
-	ed := int(tx.Index) + int(tx.Width * tx.Height) - 1
+	ed := int(tx.Index) + int(tx.Width * tx.Height)
 
 	return basebuf[st:ed]
 }
