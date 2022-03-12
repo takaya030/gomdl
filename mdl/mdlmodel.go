@@ -87,6 +87,15 @@ func (mm *MdlModel) InitView() {
 	mm.bodynum = 0
 }
 
+func (mm *MdlModel) LoadModel() {
+	if mm.mdd.GetTextureIndex() != 0 {
+		for i := 0; i < int(mm.mdd.GetNumTextures()); i++ {
+			ptexture := mm.mdd.GetTexture(i)
+			ptexture.UploadTexture(mm.mdd.BaseBufSl)
+		}
+	}
+}
+
 func (mm *MdlModel) GetSequence() int32 {
 	return mm.sequence
 }
