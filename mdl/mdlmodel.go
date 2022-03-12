@@ -6,6 +6,7 @@ import (
 	//"fmt"
 	//"github.com/go-gl/mathgl/mgl32"
 
+	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/chewxy/math32"
 	"github.com/takaya030/gomdl/studio"
 )
@@ -639,6 +640,75 @@ func (mm *MdlModel) DrawPoints () {
 			lv_idx++
 			norm_idx++
 		}
+	}
 
+	gl.CullFace(gl.FRONT)
+
+	for j := 0; j < int(mm.pmodel.NumMesh); j++ {
+		pmesh := mm.pmodel.GetMesh(mm.mdd.BaseBuf, j)
+		ptricmds := pmesh.GetTricmd(mm.mdd.BaseBuf, 0)
+		pskinref := mm.mdd.GetSkinRef(int(pmesh.SkinRef))
+		ptexture := mm.mdd.GetTexture(int(*pskinref))
+
+		var s float32 = 1.0 / float32(ptexture.Width)
+		var t float32 = 1.0 / float32(ptexture.Height)
+
+		gl.BindTexture(gl.TEXTURE_2D, uint32(ptexture.Index))
+
+		if (ptexture.Flags & STUDIO_NF_CHROME) != 0 {
+			for i := int(*ptricmds); i != 0 {
+				ptricmds = ptricmds.GetNextTricmd(1)
+
+				if i < 0 {
+					gl.Begin(gl.TRIANGLE_FAN)
+					i = -i
+				} else {
+					gl.Begin(gl.TRIANGLE_STRIP)
+				}
+
+				for i > 0 {
+					ptriarr := ptricmds.GetTricmdArray()
+
+					gl.TexCoord2f(float32(g_chrome[ptriarr[1]][0])*s, float32(g_chrome[ptriarr[1]][1])*t)
+
+					lv := g_lightvalues[ptriarr[1]]
+					gl.Color4f( lv[0], lv[1], lv[2], 1.0 )
+
+					av = g_xformverts[ptriarr[0]]
+					gl.Vertex3f(av[0], av[1], av[2])
+
+					i--
+					ptricdms = ptricdms.GetNextTricmd(4)
+				}
+				gl.End()
+			}
+		} else {
+			for i := int(*ptricmds); i != 0 {
+				ptricmds = ptricmds.GetNextTricmd(1)
+
+				if i < 0 {
+					gl.Begin(gl.TRIANGLE_FAN)
+					i = -i
+				} else {
+					gl.Begin(gl.TRIANGLE_STRIP)
+				}
+
+				for i > 0 {
+					ptriarr := ptricmds.GetTricmdArray()
+
+					gl.TexCoord2f(float32(ptriarr[2])*s, float32(ptriarr[3]])*t)
+
+					lv := g_lightvalues[ptriarr[1]]
+					gl.Color4f( lv[0], lv[1], lv[2], 1.0 )
+
+					av = g_xformverts[ptriarr[0]]
+					gl.Vertex3f(av[0], av[1], av[2])
+
+					i--
+					ptricdms = ptricdms.GetNextTricmd(4)
+				}
+				gl.End()
+			}
+		}
 	}
 }
