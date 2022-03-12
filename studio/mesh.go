@@ -29,3 +29,9 @@ func (tc *int16) GetNextTricmd(idx int) *int16 {
 
 	return p
 }
+
+func (tc *int16) GetTricmdArray() *[4]int16 {
+	p := (*[4]int16)unsafe.Pointer(tc)
+
+	return p
+}
