@@ -77,6 +77,11 @@ func NewMdlModel(mdd *MdlData) *MdlModel {
 	return mdm
 }
 
+func (mm *MdlModel) Init() {
+	mm.LoadModel()
+	mm.InitView()
+}
+
 func (mm *MdlModel) InitView() {
 	mm.SetSequence(0)
 	mm.SetController(0, 0.0)
