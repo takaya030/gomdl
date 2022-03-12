@@ -136,3 +136,11 @@ func (md *MdlData) GetNumBodyParts() int32 {
 func (md *MdlData) GetNumBones() int32 {
 	return md.Hdr.NumBones
 }
+
+func (md *MdlData) GetTextureIndex() int32 {
+	return md.Hdr.TextureIndex
+}
+
+func (md *MdlData) GetNumTextures() int32 {
+	return md.Hdr.NumTextures
+}
