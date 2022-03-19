@@ -57,6 +57,10 @@ func main() {
 				running = false
 			case *sdl.MouseMotionEvent:
 				fmt.Printf("[%d ms] MouseMotion\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n", t.Timestamp, t.Which, t.X, t.Y, t.XRel, t.YRel)
+			case  *sdl.KeyboardEvent:
+				if t.Type == sdl.KEYDOWN {
+					handleKeyPress(t.Keysym)
+				}
 			}
 		}
 		drawgl()
@@ -87,6 +91,18 @@ func mdlvwDisplay() {
 	prev_tick = curr_tick
 
 	mdlmodel.DrawModel()
+}
+
+func mdlvwNextSequence() {
+	iseq := mdlmodel.GetSequence()
+	mdlmodel.SetSequence(iseq + 1)
+}
+
+func handleKeyPress(keysym sdl.Keysym) {
+	switch keysym.Sym {
+	case sdl.K_SPACE:
+		mdlvwNextSequence()
+	}
 }
 
 func initGL() {
