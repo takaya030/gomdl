@@ -189,7 +189,7 @@ func drawgl() {
     gl.Translatef(transx, transy, transz)
 	gl.Rotatef(rotx, 0.0, 1.0, 0.0)
     gl.Rotatef(roty, 1.0, 0.0, 0.0)
-    gl.Scalef( 0.02, 0.02, 0.02 )
+    gl.Scalef( 0.015, 0.015, 0.015 )
 	gl.CullFace( gl.FRONT )
 	//gl.Enable( gl.DEPTH_TEST )
     gl.Enable(gl.TEXTURE_2D)
