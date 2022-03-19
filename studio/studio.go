@@ -1,9 +1,5 @@
 package studio
 
-import (
-	//"github.com/go-gl/mathgl/mgl32"
-)
-
 // lighting options (set Texture.Flags)
 const (
 	STUDIO_NF_FLATSHADE  = 0x0001

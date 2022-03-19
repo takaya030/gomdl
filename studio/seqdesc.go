@@ -1,12 +1,7 @@
 package studio
 
 import (
-	//"bytes"
-	//"encoding/binary"
-	//"fmt"
 	"unsafe"
-
-	//"github.com/go-gl/mathgl/mgl32"
 )
 
 // sequence descriptions
