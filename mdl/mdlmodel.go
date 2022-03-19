@@ -712,8 +712,7 @@ func (mm *MdlModel) DrawPoints () {
 		gl.BindTexture(gl.TEXTURE_2D, uint32(ptexture.Index))
 
 		if (ptexture.Flags & studio.STUDIO_NF_CHROME) != 0 {
-			i := int(*ptricmds)
-			for i != 0 {
+			for i := int(*ptricmds); i != 0; i = int(*ptricmds) {
 				ptricmds = pmesh.GetNextTricmd(ptricmds, 1)
 
 				if i < 0 {
@@ -738,11 +737,9 @@ func (mm *MdlModel) DrawPoints () {
 					ptricmds = pmesh.GetNextTricmd(ptricmds, 4)
 				}
 				gl.End()
-				i = int(*ptricmds)
 			}
 		} else {
-			i := int(*ptricmds)
-			for i != 0 {
+			for i := int(*ptricmds); i != 0; i = int(*ptricmds) {
 				ptricmds = pmesh.GetNextTricmd(ptricmds, 1)
 
 				if i < 0 {
@@ -767,7 +764,6 @@ func (mm *MdlModel) DrawPoints () {
 					ptricmds = pmesh.GetNextTricmd(ptricmds, 4)
 				}
 				gl.End()
-				i = int(*ptricmds)
 			}
 		}
 	}
