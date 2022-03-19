@@ -1,9 +1,6 @@
 package mdl
 
 import (
-	//"bytes"
-	//"encoding/binary"
-	//"fmt"
 	"unsafe"
 
 	"github.com/takaya030/gomdl/studio"

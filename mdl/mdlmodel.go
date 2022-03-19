@@ -1,11 +1,6 @@
 package mdl
 
 import (
-	//"bytes"
-	//"encoding/binary"
-	//"fmt"
-	//"github.com/go-gl/mathgl/mgl32"
-
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/chewxy/math32"
 	"github.com/takaya030/gomdl/studio"
