@@ -14,6 +14,7 @@ import (
 var mdlmodel *mdl.MdlModel
 var prev_tick float32
 var transx, transy, transz, rotx, roty float32 = 0.0, 0.0, -2.0, 235.0, -90.0
+var is_hold_l, is_hold_r bool = false, false
 
 func main() {
 	var winTitle string = "Go-SDL2 + Go-GL"
@@ -57,6 +58,13 @@ func main() {
 				running = false
 			case *sdl.MouseMotionEvent:
 				fmt.Printf("[%d ms] MouseMotion\tid:%d\tx:%d\ty:%d\txrel:%d\tyrel:%d\n", t.Timestamp, t.Which, t.X, t.Y, t.XRel, t.YRel)
+				handleMouseMotion(t.XRel, t.YRel)
+			case *sdl.MouseButtonEvent:
+				if t.Type == sdl.MOUSEBUTTONDOWN {
+					handleMouseButtonDown(t.Button)
+				} else if t.Type == sdl.MOUSEBUTTONUP {
+					handleMouseButtonUp(t.Button)
+				}
 			case  *sdl.KeyboardEvent:
 				if t.Type == sdl.KEYDOWN {
 					handleKeyPress(t.Keysym)
@@ -102,6 +110,35 @@ func handleKeyPress(keysym sdl.Keysym) {
 	switch keysym.Sym {
 	case sdl.K_SPACE:
 		mdlvwNextSequence()
+	case sdl.K_z:
+		rotx, roty = 235.0, -90.0		// reset rotations
+	}
+}
+
+func handleMouseButtonDown(button uint8) {
+	switch button {
+	case sdl.BUTTON_LEFT:
+		is_hold_l = true
+	case sdl.BUTTON_RIGHT:
+		is_hold_r = true
+	}
+}
+
+func handleMouseButtonUp(button uint8) {
+	switch button {
+	case sdl.BUTTON_LEFT:
+		is_hold_l = false
+	case sdl.BUTTON_RIGHT:
+		is_hold_r = false
+	}
+}
+
+func handleMouseMotion(xrel int32, yrel int32) {
+	if is_hold_l {
+		rotx += float32(xrel)
+	}
+	if is_hold_r {
+		roty += float32(yrel)
 	}
 }
 
