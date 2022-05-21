@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"io/ioutil"
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/mathgl/mgl32"
@@ -25,6 +26,16 @@ func main() {
 	var running bool
 	var err error
 
+	if 2 != len(os.Args) {
+		fmt.Printf("Usage: gomdl mdlfile\n")
+		return
+	}
+	mdlfile := os.Args[1]
+	if !fileExists(mdlfile) {
+		fmt.Printf("Not exists file: %s\n", mdlfile)
+		return
+	}
+
 	if err = sdl.Init(sdl.INIT_EVERYTHING); err != nil {
 		panic(err)
 	}
@@ -46,7 +57,7 @@ func main() {
 		panic(err)
 	}
 
-	mdlvwInit(`./asset/gsg9.mdl`)
+	mdlvwInit(mdlfile)
 	initGL()
 	resizeWindow(winWidth, winHeight)
 
@@ -74,6 +85,11 @@ func main() {
 		drawgl()
 		window.GLSwap()
 	}
+}
+
+func fileExists(filename string) bool {
+	_, err := os.Stat(filename)
+	return err == nil
 }
 
 func mdlvwInit(mdl_file string) {
