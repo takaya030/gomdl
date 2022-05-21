@@ -17,7 +17,7 @@ var transx, transy, transz, rotx, roty float32 = 0.0, 0.0, -2.0, 235.0, -90.0
 var is_hold_l, is_hold_r bool = false, false
 
 func main() {
-	var winTitle string = "Go-SDL2 + Go-GL"
+	var winTitle string = "GoMDL"
 	var winWidth, winHeight int32 = 800, 600
 	var window *sdl.Window
 	var context sdl.GLContext
