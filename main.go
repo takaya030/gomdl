@@ -14,7 +14,7 @@ import (
 
 var mdlmodel *mdl.MdlModel
 var prev_tick float32
-var transx, transy, transz, rotx, roty float32 = 0.0, 0.0, -2.0, 235.0, -90.0
+var transx, transy, transz, rotx, roty float32 = 0.0, 0.0, -2.0, -90.0, 235.0
 var is_hold_l, is_hold_r bool = false, false
 
 func main() {
@@ -127,7 +127,7 @@ func handleKeyPress(keysym sdl.Keysym) {
 	case sdl.K_SPACE:
 		mdlvwNextSequence()
 	case sdl.K_z:
-		rotx, roty = 235.0, -90.0		// reset rotations
+		rotx, roty = -90.0, 235.0		// reset rotations
 	}
 }
 
@@ -151,10 +151,10 @@ func handleMouseButtonUp(button uint8) {
 
 func handleMouseMotion(xrel int32, yrel int32) {
 	if is_hold_l {
-		rotx += float32(xrel)
+		roty += float32(xrel)
 	}
 	if is_hold_r {
-		roty += float32(yrel)
+		rotx += float32(yrel)
 	}
 }
 
@@ -237,15 +237,15 @@ func drawgl() {
     gl.End()                          /* Done Drawing The Quad    */
 
 	// draw StudioModel
-    gl.PushMatrix()
+	gl.PushMatrix()
 	gl.LoadIdentity()
-    gl.Translatef(transx, transy, transz)
-	gl.Rotatef(rotx, 0.0, 1.0, 0.0)
-    gl.Rotatef(roty, 1.0, 0.0, 0.0)
-    gl.Scalef( 0.015, 0.015, 0.015 )
+	gl.Translatef(transx, transy, transz)
+	gl.Rotatef(roty, 0.0, 1.0, 0.0)
+	gl.Rotatef(rotx, 1.0, 0.0, 0.0)
+	gl.Scalef( 0.015, 0.015, 0.015 )
 	gl.CullFace( gl.FRONT )
 	//gl.Enable( gl.DEPTH_TEST )
-    gl.Enable(gl.TEXTURE_2D)
+	gl.Enable(gl.TEXTURE_2D)
 
 	mdlvwDisplay()
 
