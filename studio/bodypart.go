@@ -13,7 +13,7 @@ type BodyPart struct {
 }
 
 func (b *BodyPart) GetModel(basebuf *byte, idx int) *Model {
-	pmd := (*Model)(unsafe.Add(unsafe.Pointer(basebuf), (int)(b.ModelIndex) + (int)(unsafe.Sizeof(Model{})) * idx))
+	pmd := (*Model)(unsafe.Add(unsafe.Pointer(basebuf), (int)(b.ModelIndex)+(int)(unsafe.Sizeof(Model{}))*idx))
 
 	return pmd
 }

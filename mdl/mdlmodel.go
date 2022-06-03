@@ -1,69 +1,69 @@
 package mdl
 
 import (
-	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/chewxy/math32"
+	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/takaya030/gomdl/studio"
 )
 
 const (
-	MAXSTUDIOBONES	= 128		// total bones actually used
-	MAXSTUDIOVERTS	= 2048
+	MAXSTUDIOBONES = 128 // total bones actually used
+	MAXSTUDIOVERTS = 2048
 )
 
 // global variables
 
-var g_vright		studio.Vec3		// needs to be set to viewer's right in order for chrome to work
+var g_vright studio.Vec3 // needs to be set to viewer's right in order for chrome to work
 var g_lambert float32 = 1.5
 
-var g_xformverts	[MAXSTUDIOVERTS]studio.Vec3		// transformed vertices
-var g_lightvalues	[MAXSTUDIOVERTS]studio.Vec3		// light surface normals
+var g_xformverts [MAXSTUDIOVERTS]studio.Vec3  // transformed vertices
+var g_lightvalues [MAXSTUDIOVERTS]studio.Vec3 // light surface normals
 
 // for lighting
-var	g_lightvec		studio.Vec3
-var	g_lightcolor	studio.Vec3
-var g_blightvec		[MAXSTUDIOBONES]studio.Vec3
-var	g_ambientlight	float32		// ambient world light
-var	g_shadelight	float32		// direct world light
+var g_lightvec studio.Vec3
+var g_lightcolor studio.Vec3
+var g_blightvec [MAXSTUDIOBONES]studio.Vec3
+var g_ambientlight float32 // ambient world light
+var g_shadelight float32   // direct world light
 
-var g_smodels_total	int			// cookie
+var g_smodels_total int // cookie
 
-var	g_bonetransform		[MAXSTUDIOBONES]studio.Mat34	// bone transformation matrix
+var g_bonetransform [MAXSTUDIOBONES]studio.Mat34 // bone transformation matrix
 
-var g_chrome		[MAXSTUDIOVERTS][2]int		// texture coords for surface normals
-var g_chromeage		[MAXSTUDIOBONES]int			// last time chrome vectors were updated
-var g_chromeup		[MAXSTUDIOBONES]studio.Vec3	// chrome vector "up" in bone reference frames
-var g_chromeright	[MAXSTUDIOBONES]studio.Vec3	// chrome vector "right" in bone reference frames
+var g_chrome [MAXSTUDIOVERTS][2]int           // texture coords for surface normals
+var g_chromeage [MAXSTUDIOBONES]int           // last time chrome vectors were updated
+var g_chromeup [MAXSTUDIOBONES]studio.Vec3    // chrome vector "up" in bone reference frames
+var g_chromeright [MAXSTUDIOBONES]studio.Vec3 // chrome vector "right" in bone reference frames
 
 // for setup bones
-var w_pos			[MAXSTUDIOBONES]studio.Vec3
-var w_bonematrix	studio.Mat34
-var w_q				[MAXSTUDIOBONES]studio.Vec4
+var w_pos [MAXSTUDIOBONES]studio.Vec3
+var w_bonematrix studio.Mat34
+var w_q [MAXSTUDIOBONES]studio.Vec4
 
-var w_pos2			[MAXSTUDIOBONES]studio.Vec3
-var w_q2			[MAXSTUDIOBONES]studio.Vec4
-var w_pos3			[MAXSTUDIOBONES]studio.Vec3
-var w_q3			[MAXSTUDIOBONES]studio.Vec4
-var w_pos4			[MAXSTUDIOBONES]studio.Vec3
-var w_q4			[MAXSTUDIOBONES]studio.Vec4
+var w_pos2 [MAXSTUDIOBONES]studio.Vec3
+var w_q2 [MAXSTUDIOBONES]studio.Vec4
+var w_pos3 [MAXSTUDIOBONES]studio.Vec3
+var w_q3 [MAXSTUDIOBONES]studio.Vec4
+var w_pos4 [MAXSTUDIOBONES]studio.Vec3
+var w_q4 [MAXSTUDIOBONES]studio.Vec4
 
 // calc utility
 type MdlModel struct {
-	mdd	*MdlData
+	mdd *MdlData
 
 	// entity settings
-	origin		studio.Vec3
-	angles		studio.Vec3
-	sequence	int32		// sequence index
-	frame 		float32		// frame
-	controller	[4]uint8	// bone controllers
-	mouth		uint8		// mouth position
-	blending	[2]uint8	// animation blending
-	bodynum		int32		// bodypart selection
+	origin     studio.Vec3
+	angles     studio.Vec3
+	sequence   int32    // sequence index
+	frame      float32  // frame
+	controller [4]uint8 // bone controllers
+	mouth      uint8    // mouth position
+	blending   [2]uint8 // animation blending
+	bodynum    int32    // bodypart selection
 
 	// internal data
-	pmodel		*studio.Model
-	adj			studio.Vec4
+	pmodel *studio.Model
+	adj    studio.Vec4
 }
 
 func NewMdlModel(mdd *MdlData) *MdlModel {
@@ -139,18 +139,18 @@ func (mm *MdlModel) SetController(icntl int32, flval float32) float32 {
 		}
 
 		// does the controller not wrap?
-		if bc.Start + 359.0 >= bc.End {
-			if flval > ((bc.Start + bc.End) / 2.0) + 180 {
+		if bc.Start+359.0 >= bc.End {
+			if flval > ((bc.Start+bc.End)/2.0)+180 {
 				flval = flval - 360
 			}
-			if flval < ((bc.Start + bc.End) / 2.0) - 180 {
+			if flval < ((bc.Start+bc.End)/2.0)-180 {
 				flval = flval + 360
 			}
 		} else {
 			if flval > 360 {
-				flval = flval - math32.Floor(flval / 360.0) * 360.0
+				flval = flval - math32.Floor(flval/360.0)*360.0
 			} else if flval < 0 {
-				flval = flval + math32.Floor((flval / -360.0) + 1) * 360.0
+				flval = flval + math32.Floor((flval/-360.0)+1)*360.0
 			}
 		}
 	}
@@ -165,7 +165,7 @@ func (mm *MdlModel) SetController(icntl int32, flval float32) float32 {
 	}
 	mm.controller[icntl] = uint8(setting)
 
-	return float32(setting) * (1.0 / 255.0) * (bc.End - bc.Start) + bc.Start
+	return float32(setting)*(1.0/255.0)*(bc.End-bc.Start) + bc.Start
 }
 
 func (mm *MdlModel) SetMouth(flval float32) float32 {
@@ -193,18 +193,18 @@ func (mm *MdlModel) SetMouth(flval float32) float32 {
 		}
 
 		// does the controller not wrap?
-		if bc.Start + 359.0 >= bc.End {
-			if flval > ((bc.Start + bc.End) / 2.0) + 180 {
+		if bc.Start+359.0 >= bc.End {
+			if flval > ((bc.Start+bc.End)/2.0)+180 {
 				flval = flval - 360
 			}
-			if flval < ((bc.Start + bc.End) / 2.0) - 180 {
+			if flval < ((bc.Start+bc.End)/2.0)-180 {
 				flval = flval + 360
 			}
 		} else {
 			if flval > 360 {
-				flval = flval - math32.Floor(flval / 360.0) * 360.0
+				flval = flval - math32.Floor(flval/360.0)*360.0
 			} else if flval < 0 {
-				flval = flval + math32.Floor((flval / -360.0) + 1) * 360.0
+				flval = flval + math32.Floor((flval/-360.0)+1)*360.0
 			}
 		}
 	}
@@ -219,7 +219,7 @@ func (mm *MdlModel) SetMouth(flval float32) float32 {
 	}
 	mm.mouth = uint8(setting)
 
-	return float32(setting) * (1.0 / 64.0) * (bc.End - bc.Start) + bc.Start
+	return float32(setting)*(1.0/64.0)*(bc.End-bc.Start) + bc.Start
 }
 
 func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
@@ -237,11 +237,11 @@ func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
 		}
 
 		// does the controller not wrap?
-		if seq.BlendStart[iblender] + 359.0 >= seq.BlendEnd[iblender] {
-			if flval > ((seq.BlendStart[iblender] + seq.BlendEnd[iblender]) / 2.0) + 180 {
+		if seq.BlendStart[iblender]+359.0 >= seq.BlendEnd[iblender] {
+			if flval > ((seq.BlendStart[iblender]+seq.BlendEnd[iblender])/2.0)+180 {
 				flval = flval - 360
 			}
-			if flval < ((seq.BlendStart[iblender] + seq.BlendEnd[iblender]) / 2.0) - 180 {
+			if flval < ((seq.BlendStart[iblender]+seq.BlendEnd[iblender])/2.0)-180 {
 				flval = flval + 360
 			}
 		}
@@ -257,7 +257,7 @@ func (mm *MdlModel) SetBlending(iblender int32, flval float32) float32 {
 	}
 	mm.blending[iblender] = uint8(setting)
 
-	return float32(setting) * (1.0 / 255.0) * (seq.BlendEnd[iblender] - seq.BlendStart[iblender]) + seq.BlendStart[iblender]
+	return float32(setting)*(1.0/255.0)*(seq.BlendEnd[iblender]-seq.BlendStart[iblender]) + seq.BlendStart[iblender]
 }
 
 func (mm *MdlModel) AdvanceFrame(dt float32) {
@@ -273,7 +273,7 @@ func (mm *MdlModel) AdvanceFrame(dt float32) {
 		mm.frame = 0
 	} else {
 		// wrap
-		mm.frame -= math32.Floor(mm.frame / float32(seq.NumFrames - 1)) * float32(seq.NumFrames - 1)
+		mm.frame -= math32.Floor(mm.frame/float32(seq.NumFrames-1)) * float32(seq.NumFrames-1)
 	}
 }
 
@@ -281,12 +281,12 @@ func (mm *MdlModel) SetupLighting() {
 	g_ambientlight = 32.0
 	g_shadelight = 192.0
 
-	g_lightvec = studio.Vec3{ 0, 0, -1.0 }
+	g_lightvec = studio.Vec3{0, 0, -1.0}
 
-	g_lightcolor = studio.Vec3{ 1.0, 1.0, 1.0 }
+	g_lightcolor = studio.Vec3{1.0, 1.0, 1.0}
 
 	for i := 0; i < int(mm.mdd.GetNumBones()); i++ {
-		g_lightvec.VectorIRotate( &(g_bonetransform[i]), &(g_blightvec[i]) )
+		g_lightvec.VectorIRotate(&(g_bonetransform[i]), &(g_blightvec[i]))
 	}
 
 }
@@ -311,7 +311,7 @@ func (mm *MdlModel) CalcBoneAdj() {
 		i := int(tmpbc.Index)
 		if i <= 3 {
 			if (tmpbc.Type & studio.STUDIO_RLOOP) != 0 {
-				value = float32(mm.controller[i]) * (360.0 / 256.0) + tmpbc.Start
+				value = float32(mm.controller[i])*(360.0/256.0) + tmpbc.Start
 			} else {
 				value = float32(mm.controller[i]) / 255.0
 				if value < 0 {
@@ -320,7 +320,7 @@ func (mm *MdlModel) CalcBoneAdj() {
 				if value > 1.0 {
 					value = 1.0
 				}
-				value = (1.0 - value) * tmpbc.Start + value * tmpbc.End
+				value = (1.0-value)*tmpbc.Start + value*tmpbc.End
 			}
 
 		} else {
@@ -328,7 +328,7 @@ func (mm *MdlModel) CalcBoneAdj() {
 			if value > 1.0 {
 				value = 1.0
 			}
-			value = (1.0 - value) * tmpbc.Start + value * tmpbc.End
+			value = (1.0-value)*tmpbc.Start + value*tmpbc.End
 		}
 
 		switch tmpbc.Type & studio.STUDIO_TYPES {
@@ -346,8 +346,8 @@ func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone,
 	for j := 0; j < 3; j++ {
 
 		if panim.Offset[j+3] == 0 {
-			angle1[j] = pbone.Value[j+3]		// default
-			angle2[j] = pbone.Value[j+3]		// default
+			angle1[j] = pbone.Value[j+3] // default
+			angle2[j] = pbone.Value[j+3] // default
 		} else {
 			var panimvalue *studio.AnimValue
 			var panimvalue2 *studio.AnimValue2
@@ -360,14 +360,14 @@ func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone,
 			}
 			// Bah, missing blend!
 			if int(panimvalue.Valid) > k {
-				panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
+				panimvalue2 = panimvalue.GetAddedPointer(k + 1).GetAnimValue2Pointer()
 				angle1[j] = float32(panimvalue2.Value)
 
-				if int(panimvalue.Valid) > k + 1 {
-					panimvalue2 = panimvalue.GetAddedPointer(k+2).GetAnimValue2Pointer()
+				if int(panimvalue.Valid) > k+1 {
+					panimvalue2 = panimvalue.GetAddedPointer(k + 2).GetAnimValue2Pointer()
 					angle2[j] = float32(panimvalue2.Value)
 				} else {
-					if int(panimvalue.Total) > k + 1 {
+					if int(panimvalue.Total) > k+1 {
 						angle2[j] = angle1[j]
 					} else {
 						panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid) + 2).GetAnimValue2Pointer()
@@ -377,15 +377,15 @@ func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone,
 			} else {
 				panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)).GetAnimValue2Pointer()
 				angle1[j] = float32(panimvalue2.Value)
-				if int(panimvalue.Total) > k + 1 {
+				if int(panimvalue.Total) > k+1 {
 					angle2[j] = angle1[j]
 				} else {
 					panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid) + 2).GetAnimValue2Pointer()
 					angle2[j] = float32(panimvalue2.Value)
 				}
 			}
-			angle1[j] = pbone.Value[j+3] + angle1[j] * pbone.Scale[j+3]
-			angle2[j] = pbone.Value[j+3] + angle2[j] * pbone.Scale[j+3]
+			angle1[j] = pbone.Value[j+3] + angle1[j]*pbone.Scale[j+3]
+			angle2[j] = pbone.Value[j+3] + angle2[j]*pbone.Scale[j+3]
 		}
 
 		if int(pbone.BoneController[j+3]) != -1 {
@@ -394,7 +394,7 @@ func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone,
 		}
 	}
 
-	var	q1, q2 studio.Vec4
+	var q1, q2 studio.Vec4
 	if angle1.VectorCompare(&angle2) == false {
 		angle1.AngleQuaternion(&q1)
 		angle2.AngleQuaternion(&q2)
@@ -407,14 +407,14 @@ func (mm *MdlModel) CalcBoneQuaternion(frame int, s float32, pbone *studio.Bone,
 func (mm *MdlModel) CalcBonePosition(frame int, s float32, pbone *studio.Bone, panim *studio.Anim, pos *studio.Vec3) {
 
 	for j := 0; j < 3; j++ {
-		pos[j] = pbone.Value[j]; // default;
+		pos[j] = pbone.Value[j] // default;
 		if panim.Offset[j] != 0 {
 			var panimvalue *studio.AnimValue
 			var panimvalue2 *studio.AnimValue2
 			var panimvalue2_2 *studio.AnimValue2
 
 			panimvalue = panim.GetAnimValue(j)
-			k := frame;
+			k := frame
 			// find span of values that includes the frame we want
 			for int(panimvalue.Total) <= k {
 				k -= int(panimvalue.Total)
@@ -423,20 +423,20 @@ func (mm *MdlModel) CalcBonePosition(frame int, s float32, pbone *studio.Bone, p
 			// if we're inside the span
 			if int(panimvalue.Valid) > k {
 				// and there's more data in the span
-				if int(panimvalue.Valid) > k + 1 {
-					panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
-					panimvalue2_2 = panimvalue.GetAddedPointer(k+2).GetAnimValue2Pointer()
-					pos[j] += (float32(panimvalue2.Value) * (1.0 - s) + s * float32(panimvalue2_2.Value)) * pbone.Scale[j]
+				if int(panimvalue.Valid) > k+1 {
+					panimvalue2 = panimvalue.GetAddedPointer(k + 1).GetAnimValue2Pointer()
+					panimvalue2_2 = panimvalue.GetAddedPointer(k + 2).GetAnimValue2Pointer()
+					pos[j] += (float32(panimvalue2.Value)*(1.0-s) + s*float32(panimvalue2_2.Value)) * pbone.Scale[j]
 				} else {
-					panimvalue2 = panimvalue.GetAddedPointer(k+1).GetAnimValue2Pointer()
+					panimvalue2 = panimvalue.GetAddedPointer(k + 1).GetAnimValue2Pointer()
 					pos[j] += float32(panimvalue2.Value) * pbone.Scale[j]
 				}
 			} else {
 				// are we at the end of the repeating values section and there's another section with data?
-				if int(panimvalue.Total) <= k + 1 {
+				if int(panimvalue.Total) <= k+1 {
 					panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)).GetAnimValue2Pointer()
-					panimvalue2_2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)+2).GetAnimValue2Pointer()
-					pos[j] += (float32(panimvalue2.Value) * (1.0 - s) + s * float32(panimvalue2_2.Value)) * pbone.Scale[j]
+					panimvalue2_2 = panimvalue.GetAddedPointer(int(panimvalue.Valid) + 2).GetAnimValue2Pointer()
+					pos[j] += (float32(panimvalue2.Value)*(1.0-s) + s*float32(panimvalue2_2.Value)) * pbone.Scale[j]
 				} else {
 					panimvalue2 = panimvalue.GetAddedPointer(int(panimvalue.Valid)).GetAnimValue2Pointer()
 					pos[j] += float32(panimvalue2.Value) * pbone.Scale[j]
@@ -449,7 +449,7 @@ func (mm *MdlModel) CalcBonePosition(frame int, s float32, pbone *studio.Bone, p
 	}
 }
 
-func (mm *MdlModel) CalcRotations (pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUDIOBONES]studio.Vec4, pseqdesc *studio.SeqDesc, panim *studio.Anim, f float32) {
+func (mm *MdlModel) CalcRotations(pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUDIOBONES]studio.Vec4, pseqdesc *studio.SeqDesc, panim *studio.Anim, f float32) {
 
 	var frame int = int(f)
 	var s float32 = f - float32(frame)
@@ -459,8 +459,8 @@ func (mm *MdlModel) CalcRotations (pos *[MAXSTUDIOBONES]studio.Vec3, q *[MAXSTUD
 
 	for i := 0; i < int(mm.mdd.GetNumBones()); i++ {
 		pbone := mm.mdd.GetBone(i)
-		mm.CalcBoneQuaternion( frame, s, pbone, panim, &q[i] )
-		mm.CalcBonePosition( frame, s, pbone, panim, &pos[i] )
+		mm.CalcBoneQuaternion(frame, s, pbone, panim, &q[i])
+		mm.CalcBonePosition(frame, s, pbone, panim, &pos[i])
 		panim = panim.GetNextAnim(1)
 	}
 
@@ -487,17 +487,17 @@ func (mm *MdlModel) SlerpBones(q1 *[MAXSTUDIOBONES]studio.Vec4, pos1 *[MAXSTUDIO
 	var q3 studio.Vec4
 
 	for i := 0; i < int(mm.mdd.GetNumBones()); i++ {
-		q1[i].QuaternionSlerp( q2[i], s, &q3 )
+		q1[i].QuaternionSlerp(q2[i], s, &q3)
 		q1[i] = q3
-		pos1[i][0] = pos1[i][0] * s1 + pos2[i][0] * s
-		pos1[i][1] = pos1[i][1] * s1 + pos2[i][1] * s
-		pos1[i][2] = pos1[i][2] * s1 + pos2[i][2] * s
+		pos1[i][0] = pos1[i][0]*s1 + pos2[i][0]*s
+		pos1[i][1] = pos1[i][1]*s1 + pos2[i][1]*s
+		pos1[i][2] = pos1[i][2]*s1 + pos2[i][2]*s
 	}
 }
 
 func (mm *MdlModel) SetUpBones() {
 
-	if mm.sequence >=  mm.mdd.GetNumSeq() {
+	if mm.sequence >= mm.mdd.GetNumSeq() {
 		mm.sequence = 0
 	}
 
@@ -534,14 +534,14 @@ func (mm *MdlModel) SetUpBones() {
 
 		w_q[i].QuaternionMatrix(&w_bonematrix)
 
-		w_bonematrix[0][3] = w_pos[i][0];
-		w_bonematrix[1][3] = w_pos[i][1];
-		w_bonematrix[2][3] = w_pos[i][2];
+		w_bonematrix[0][3] = w_pos[i][0]
+		w_bonematrix[1][3] = w_pos[i][1]
+		w_bonematrix[2][3] = w_pos[i][2]
 
 		if pbone.Parent == -1 {
 			g_bonetransform[i] = w_bonematrix
 		} else {
-			g_bonetransform[int(pbone.Parent)].ConcatTransforms (&w_bonematrix, &g_bonetransform[i])
+			g_bonetransform[int(pbone.Parent)].ConcatTransforms(&w_bonematrix, &g_bonetransform[i])
 		}
 	}
 }
@@ -555,7 +555,7 @@ func (mm *MdlModel) Lighting(bone int, flags int32, normal *studio.Vec3) float32
 	if (flags & studio.STUDIO_NF_FLATSHADE) != 0 {
 		illum += g_shadelight * 0.8
 	} else {
-		lightcos = normal.DotProduct(&g_blightvec[bone])	// -1 colinear, 1 opposite
+		lightcos = normal.DotProduct(&g_blightvec[bone]) // -1 colinear, 1 opposite
 
 		if lightcos > 1.0 {
 			lightcos = 1.0
@@ -568,11 +568,11 @@ func (mm *MdlModel) Lighting(bone int, flags int32, normal *studio.Vec3) float32
 			r = 1.0
 		}
 
-		lightcos = (lightcos + (r - 1.0)) / r 		// do modified hemispherical lighting
+		lightcos = (lightcos + (r - 1.0)) / r // do modified hemispherical lighting
 		if lightcos > 0.0 {
 			illum -= g_shadelight * lightcos
 		}
-		if (illum <= 0) {
+		if illum <= 0 {
 			illum = 0
 		}
 	}
@@ -581,16 +581,16 @@ func (mm *MdlModel) Lighting(bone int, flags int32, normal *studio.Vec3) float32
 		illum = 255.0
 	}
 
-	return illum / 255.0	// Light from 0 to 1.0
+	return illum / 255.0 // Light from 0 to 1.0
 }
 
 func (mm *MdlModel) Chrome(pchrome *[2]int, bone int, normal *studio.Vec3) {
 
 	if g_chromeage[bone] != g_smodels_total {
 		// calculate vectors from the viewer to the bone. This roughly adjusts for position
-		var chromeupvec		studio.Vec3	// g_chrome t vector in world reference frame
-		var chromerightvec	studio.Vec3	// g_chrome s vector in world reference frame
-		var tmp				studio.Vec3	// vector pointing at bone in world reference frame
+		var chromeupvec studio.Vec3    // g_chrome t vector in world reference frame
+		var chromerightvec studio.Vec3 // g_chrome s vector in world reference frame
+		var tmp studio.Vec3            // vector pointing at bone in world reference frame
 
 		mm.origin.VectorScale(-1.0, &tmp)
 		tmp[0] += g_bonetransform[bone][0][3]
@@ -608,20 +608,20 @@ func (mm *MdlModel) Chrome(pchrome *[2]int, bone int, normal *studio.Vec3) {
 		g_chromeage[bone] = g_smodels_total
 	}
 
-	var	n float32
+	var n float32
 
 	// calc s coord
 	n = normal.DotProduct(&g_chromeright[bone])
-	pchrome[0] = int((n + 1.0) * 32.0)		// FIX: make this a float
+	pchrome[0] = int((n + 1.0) * 32.0) // FIX: make this a float
 
 	// calc t coord
 	n = normal.DotProduct(&g_chromeup[bone])
-	pchrome[1] = int((n + 1.0) * 32.0)		// FIX: make this a float
+	pchrome[1] = int((n + 1.0) * 32.0) // FIX: make this a float
 }
 
-func (mm *MdlModel) DrawModel () {
+func (mm *MdlModel) DrawModel() {
 
-	g_smodels_total++		// render data cache cookie
+	g_smodels_total++ // render data cache cookie
 
 	if mm.mdd.GetNumBodyParts() == 0 {
 		return
@@ -629,11 +629,11 @@ func (mm *MdlModel) DrawModel () {
 
 	gl.PushMatrix()
 
-    gl.Translatef(mm.origin[0], mm.origin[1], mm.origin[2])
+	gl.Translatef(mm.origin[0], mm.origin[1], mm.origin[2])
 
-    gl.Rotatef(mm.angles[1],  0, 0, 1)
-    gl.Rotatef(mm.angles[0],  0, 1, 0)
-    gl.Rotatef(mm.angles[2],  1, 0, 0)
+	gl.Rotatef(mm.angles[1], 0, 0, 1)
+	gl.Rotatef(mm.angles[0], 0, 1, 0)
+	gl.Rotatef(mm.angles[2], 1, 0, 0)
 
 	// gl.ShadeModel(gl.SMOOTH)
 
@@ -659,7 +659,7 @@ func (mm *MdlModel) DrawModel () {
 	gl.PopMatrix()
 }
 
-func (mm *MdlModel) DrawPoints () {
+func (mm *MdlModel) DrawPoints() {
 
 	for i := 0; i < int(mm.pmodel.NumVerts); i++ {
 		pstudiovert := mm.pmodel.GetStudioVert(mm.mdd.BaseBuf, i)
@@ -681,7 +681,7 @@ func (mm *MdlModel) DrawPoints () {
 			lv_tmp := mm.Lighting(normbone, flags, pstudionorm)
 
 			if (flags & studio.STUDIO_NF_CHROME) != 0 {
-				mm.Chrome( &g_chrome[lv_idx], normbone, pstudionorm )
+				mm.Chrome(&g_chrome[lv_idx], normbone, pstudionorm)
 			}
 
 			g_lightvalues[lv_idx][0] = lv_tmp * g_lightcolor[0]
@@ -723,7 +723,7 @@ func (mm *MdlModel) DrawPoints () {
 					gl.TexCoord2f(float32(g_chrome[ptriarr[1]][0])*s, float32(g_chrome[ptriarr[1]][1])*t)
 
 					lv := g_lightvalues[ptriarr[1]]
-					gl.Color4f( lv[0], lv[1], lv[2], 1.0 )
+					gl.Color4f(lv[0], lv[1], lv[2], 1.0)
 
 					av := g_xformverts[ptriarr[0]]
 					gl.Vertex3f(av[0], av[1], av[2])
@@ -750,7 +750,7 @@ func (mm *MdlModel) DrawPoints () {
 					gl.TexCoord2f(float32(ptriarr[2])*s, float32(ptriarr[3])*t)
 
 					lv := g_lightvalues[ptriarr[1]]
-					gl.Color4f( lv[0], lv[1], lv[2], 1.0 )
+					gl.Color4f(lv[0], lv[1], lv[2], 1.0)
 
 					av := g_xformverts[ptriarr[0]]
 					gl.Vertex3f(av[0], av[1], av[2])

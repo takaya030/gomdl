@@ -15,14 +15,14 @@ type Mesh struct {
 
 func (me *Mesh) GetTricmd(basebuf *byte, idx int) *int16 {
 	var a int16
-	ptc := (*int16)(unsafe.Add(unsafe.Pointer(basebuf), (int)(me.TriIndex) + int(unsafe.Sizeof(a)) * idx))
+	ptc := (*int16)(unsafe.Add(unsafe.Pointer(basebuf), (int)(me.TriIndex)+int(unsafe.Sizeof(a))*idx))
 
 	return ptc
 }
 
 func (me *Mesh) GetNextTricmd(tc *int16, idx int) *int16 {
 	var a int16
-	p := (*int16)(unsafe.Add(unsafe.Pointer(tc), int(unsafe.Sizeof(a)) * idx))
+	p := (*int16)(unsafe.Add(unsafe.Pointer(tc), int(unsafe.Sizeof(a))*idx))
 
 	return p
 }

@@ -1,8 +1,8 @@
 package studio
 
 import (
-	"unsafe"
 	"github.com/go-gl/gl/v2.1/gl"
+	"unsafe"
 )
 
 var g_texnum int32 = 100
@@ -22,20 +22,20 @@ type Rgb struct {
 
 func (tx *Texture) GetPixelBuf(basebuf []byte) []byte {
 	st := int(tx.Index)
-	ed := int(tx.Index) + int(tx.Width * tx.Height)
+	ed := int(tx.Index) + int(tx.Width*tx.Height)
 
 	return basebuf[st:ed]
 }
 
 func (tx *Texture) GetPalBuf(basebuf []byte) []byte {
-	st := int(tx.Index) + int(tx.Width * tx.Height)
-	ed := int(tx.Index) + int(tx.Width * tx.Height) + (256 * 3)
+	st := int(tx.Index) + int(tx.Width*tx.Height)
+	ed := int(tx.Index) + int(tx.Width*tx.Height) + (256 * 3)
 
 	return basebuf[st:ed]
 }
 
-func (tx *Texture) GetRgb( pixels []byte, pals []byte, pxidx int) *Rgb {
-	r := (*Rgb)(unsafe.Pointer(&pals[int(pixels[pxidx]) * 3]))
+func (tx *Texture) GetRgb(pixels []byte, pals []byte, pxidx int) *Rgb {
+	r := (*Rgb)(unsafe.Pointer(&pals[int(pixels[pxidx])*3]))
 
 	return r
 }
@@ -60,7 +60,7 @@ func (tx *Texture) UploadTexture(basebuf []byte) {
 		outheight = 256
 	}
 
-	var	row1, row2, col1, col2 [256]int
+	var row1, row2, col1, col2 [256]int
 
 	for i := 0; i < outwidth; i++ {
 		col1[i] = int((float32(i) + 0.25) * (float32(tx.Width) / float32(outwidth)))
@@ -68,31 +68,31 @@ func (tx *Texture) UploadTexture(basebuf []byte) {
 	}
 
 	for i := 0; i < outheight; i++ {
-		row1[i] = int((float32(i) + 0.25) * (float32(tx.Height) / float32(outheight))) * int(tx.Width)
-		row2[i] = int((float32(i) + 0.75) * (float32(tx.Height) / float32(outheight))) * int(tx.Width)
+		row1[i] = int((float32(i)+0.25)*(float32(tx.Height)/float32(outheight))) * int(tx.Width)
+		row2[i] = int((float32(i)+0.75)*(float32(tx.Height)/float32(outheight))) * int(tx.Width)
 	}
 
 	pixels := tx.GetPixelBuf(basebuf)
 	pals := tx.GetPalBuf(basebuf)
-	out := make([]byte, outwidth * outheight * 4)
+	out := make([]byte, outwidth*outheight*4)
 
 	// scale down and convert to 32bit RGB
 	var out_idx int = 0
 	for i := 0; i < outheight; i++ {
 		for j := 0; j < outwidth; j++ {
-			pix1 := tx.GetRgb(pixels, pals, row1[i] + col1[j])
-			pix2 := tx.GetRgb(pixels, pals, row1[i] + col2[j])
-			pix3 := tx.GetRgb(pixels, pals, row2[i] + col1[j])
-			pix4 := tx.GetRgb(pixels, pals, row2[i] + col2[j])
+			pix1 := tx.GetRgb(pixels, pals, row1[i]+col1[j])
+			pix2 := tx.GetRgb(pixels, pals, row1[i]+col2[j])
+			pix3 := tx.GetRgb(pixels, pals, row2[i]+col1[j])
+			pix4 := tx.GetRgb(pixels, pals, row2[i]+col2[j])
 
 			col_r := (uint(pix1.r) + uint(pix2.r) + uint(pix3.r) + uint(pix4.r)) >> 2
 			col_g := (uint(pix1.g) + uint(pix2.g) + uint(pix3.g) + uint(pix4.g)) >> 2
 			col_b := (uint(pix1.b) + uint(pix2.b) + uint(pix3.b) + uint(pix4.b)) >> 2
 
-			out[out_idx + 0] = byte(col_r)
-			out[out_idx + 1] = byte(col_g)
-			out[out_idx + 2] = byte(col_b)
-			out[out_idx + 3] = 0xFF;
+			out[out_idx+0] = byte(col_r)
+			out[out_idx+1] = byte(col_g)
+			out[out_idx+2] = byte(col_b)
+			out[out_idx+3] = 0xFF
 			out_idx += 4
 		}
 	}
