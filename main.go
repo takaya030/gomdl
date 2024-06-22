@@ -25,7 +25,7 @@ func main() {
 	var running bool
 	var err error
 
-	if 2 != len(os.Args) {
+	if len(os.Args) != 2 {
 		fmt.Printf("Usage: gomdl mdlfile\n")
 		return
 	}
