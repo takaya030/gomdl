@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/go-gl/gl/v2.1/gl"
 	"github.com/go-gl/mathgl/mgl32"
 	"github.com/veandco/go-sdl2/sdl"
-	"io/ioutil"
-	"os"
 
 	"github.com/takaya030/gomdl/mdl"
 )
@@ -93,7 +93,7 @@ func fileExists(filename string) bool {
 
 func mdlvwInit(mdl_file string) {
 
-	buf, rferr := ioutil.ReadFile(mdl_file)
+	buf, rferr := os.ReadFile(mdl_file)
 	if rferr != nil {
 		fmt.Print(rferr)
 		return
