@@ -9,4 +9,4 @@ require (
 	github.com/veandco/go-sdl2 v0.4.33
 )
 
-require golang.org/x/image v0.15.0 // indirect
+require golang.org/x/image v0.18.0 // indirect
