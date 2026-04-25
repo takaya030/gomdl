@@ -1,6 +1,6 @@
 module github.com/takaya030/gomdl
 
-go 1.20
+go 1.25.0
 
 require (
 	github.com/chewxy/math32 v1.10.1
@@ -9,4 +9,4 @@ require (
 	github.com/veandco/go-sdl2 v0.4.33
 )
 
-require golang.org/x/image v0.18.0 // indirect
+require golang.org/x/image v0.39.0 // indirect
